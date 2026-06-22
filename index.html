@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexaConsult — Kurumsal Landing Page Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #0B3D91;
+      --accent:  #1A73E8;
+      --light:   #F4F7FD;
+      --white:   #FFFFFF;
+      --text:    #1C2B4A;
+      --muted:   #5E6E8A;
+      --border:  #DDE4EF;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); }
+
+    
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 6%; height: 64px;
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.3rem; color: var(--primary);
+      letter-spacing: -0.03em;
+    }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--primary); }
+    .nav-cta {
+      background: var(--accent); color: var(--white);
+      padding: 9px 22px; border-radius: 6px;
+      text-decoration: none; font-size: 0.87rem; font-weight: 600;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--primary); }
+
+    
+    #hero {
+      min-height: 100vh; padding-top: 64px;
+      background: linear-gradient(150deg, #071528 0%, #0B3D91 60%, #1A73E8 100%);
+      display: flex; align-items: center;
+      padding-left: 6%; padding-right: 6%;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg-circle {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.04);
+    }
+    .hero-bg-circle.c1 { width: 600px; height: 600px; top: -200px; right: -150px; }
+    .hero-bg-circle.c2 { width: 300px; height: 300px; bottom: -100px; left: 10%; }
+    .hero-inner { position: relative; z-index: 1; max-width: 700px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 0.78rem; color: rgba(255,255,255,0.8);
+      font-weight: 500; letter-spacing: 0.05em;
+      margin-bottom: 28px; text-transform: uppercase;
+    }
+    .hero-badge::before { content: '●'; color: #4ADE80; font-size: 0.6rem; }
+    .hero-h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 800; color: var(--white);
+      line-height: 1.08; letter-spacing: -0.03em;
+      margin-bottom: 22px;
+    }
+    .hero-h1 em { font-style: normal; color: #93C5FD; }
+    .hero-sub {
+      font-size: 1.05rem; color: rgba(255,255,255,0.65);
+      line-height: 1.75; max-width: 520px; margin-bottom: 40px;
+    }
+    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-white {
+      background: var(--white); color: var(--primary);
+      padding: 13px 30px; border-radius: 7px;
+      text-decoration: none; font-weight: 700; font-size: 0.92rem;
+      transition: all 0.2s;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+    .btn-ghost-white {
+      border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85);
+      padding: 13px 30px; border-radius: 7px;
+      text-decoration: none; font-weight: 500; font-size: 0.92rem;
+      transition: all 0.2s;
+    }
+    .btn-ghost-white:hover { border-color: rgba(255,255,255,0.7); color: var(--white); }
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 56px;
+      padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .hero-stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem; font-weight: 800; color: var(--white);
+    }
+    .hero-stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+    
+    section { padding: 90px 6%; }
+    .eyebrow {
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 12px;
+    }
+    .section-h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; line-height: 1.15;
+    }
+
+    
+    #services { background: var(--light); }
+    .services-header { text-align: center; margin-bottom: 56px; }
+    .services-header .section-h2 { margin-bottom: 16px; }
+    .services-header p { color: var(--muted); font-size: 1rem; max-width: 480px; margin: 0 auto; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .service-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 32px 26px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(11,61,145,0.08);
+    }
+    .service-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      background: linear-gradient(135deg, #EBF3FE, #C7DFFB);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 20px;
+    }
+    .service-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: var(--text); margin-bottom: 10px;
+    }
+    .service-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+
+    
+    #pricing { background: var(--white); }
+    .pricing-header { text-align: center; margin-bottom: 56px; }
+    .pricing-header .section-h2 { margin-bottom: 16px; }
+    .pricing-header p { color: var(--muted); font-size: 1rem; }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px; max-width: 1000px; margin: 0 auto;
+    }
+    .pricing-card {
+      border: 1px solid var(--border);
+      border-radius: 14px; padding: 36px 30px;
+      position: relative; transition: transform 0.2s;
+    }
+    .pricing-card:hover { transform: translateY(-3px); }
+    .pricing-card.featured {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(26,115,232,0.08);
+    }
+    .featured-badge {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      background: var(--accent); color: var(--white);
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      padding: 4px 14px; border-radius: 20px; text-transform: uppercase;
+    }
+    .plan-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--text); margin-bottom: 10px;
+    }
+    .plan-price {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.6rem; font-weight: 800;
+      color: var(--primary); line-height: 1; margin-bottom: 4px;
+    }
+    .plan-price sup { font-size: 1.2rem; vertical-align: top; margin-top: 8px; }
+    .plan-period { font-size: 0.82rem; color: var(--muted); margin-bottom: 24px; }
+    .plan-features { list-style: none; margin-bottom: 28px; }
+    .plan-features li {
+      font-size: 0.88rem; color: var(--text);
+      padding: 7px 0; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .plan-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
+    .plan-btn {
+      display: block; text-align: center;
+      padding: 12px; border-radius: 7px;
+      font-weight: 600; font-size: 0.9rem;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .plan-btn.solid {
+      background: var(--accent); color: var(--white);
+    }
+    .plan-btn.solid:hover { background: var(--primary); }
+    .plan-btn.outline {
+      border: 1.5px solid var(--border); color: var(--text);
+    }
+    .plan-btn.outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    
+    #contact {
+      background: var(--light);
+      text-align: center;
+    }
+    #contact .section-h2 { margin-bottom: 16px; }
+    #contact p { color: var(--muted); margin-bottom: 36px; font-size: 1rem; }
+    .contact-form {
+      max-width: 520px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 13px 16px;
+      font-family: 'Inter', sans-serif; font-size: 0.92rem;
+      color: var(--text); background: var(--white);
+      transition: border-color 0.2s; outline: none;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus { border-color: var(--accent); }
+    .contact-form textarea { resize: vertical; min-height: 120px; }
+    .contact-form button {
+      background: var(--accent); color: var(--white);
+      border: none; border-radius: 8px;
+      padding: 14px; font-size: 0.95rem;
+      font-weight: 600; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .contact-form button:hover { background: var(--primary); }
+
+    
+    footer {
+      background: var(--text); color: rgba(255,255,255,0.45);
+      text-align: center; padding: 24px;
+      font-size: 0.8rem;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.6); text-decoration: none;
+      font-size: 0.8rem; transition: color 0.2s;
+      margin-bottom: 8px;
+    }
+    .back-link:hover { color: #93C5FD; }
+
+
+    .demo-notice {
+      position: fixed; bottom: 20px; right: 20px; z-index: 200;
+      background: var(--primary); color: var(--white);
+      padding: 10px 18px; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 600;
+      box-shadow: 0 4px 20px rgba(11,61,145,0.4);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .demo-notice a {
+      color: #93C5FD; text-decoration: none; font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 4%; }
+      .nav-links { display: none; }
+      section { padding: 70px 4%; }
+      .hero-stats { flex-wrap: wrap; gap: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  
+  <div class="demo-notice">
+    📄 Demo Proje — <a href="../index.html">← Portfolyoya Dön</a>
+  </div>
+
+  
+  <nav>
+    <div class="logo">Nexa<span>Consult</span></div>
+    <ul class="nav-links">
+      <li><a href="#services">Hizmetler</a></li>
+      <li><a href="#pricing">Fiyatlandırma</a></li>
+      <li><a href="#contact">İletişim</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Ücretsiz Danışma</a>
+  </nav>
+
+  
+  <section id="hero">
+    <div class="hero-bg-circle c1"></div>
+    <div class="hero-bg-circle c2"></div>
+    <div class="hero-inner">
+      <div class="hero-badge">Kurumsal & Bireysel Danışmanlık</div>
+      <h1 class="hero-h1">
+        İşinizi bir sonraki<br>seviyeye <em>taşıyın.</em>
+      </h1>
+      <p class="hero-sub">
+        Kurumsal danışmanlık, dijital dönüşüm ve strateji geliştirme alanlarında
+        uzman ekibimizle hedeflerinize ulaşın.
+      </p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn-white">Paketi Seç</a>
+        <a href="#contact" class="btn-ghost-white">Bize Ulaşın</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">500+</div>
+          <div class="hero-stat-label">Mutlu Müşteri</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">12</div>
+          <div class="hero-stat-label">Yıl Deneyim</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">98%</div>
+          <div class="hero-stat-label">Memnuniyet</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  
+  <section id="services">
+    <div class="services-header">
+      <p class="eyebrow">Hizmetlerimiz</p>
+      <h2 class="section-h2">Her ölçekte işletme için<br>özel çözümler</h2>
+      <p>Kurumsal hedeflerinize uygun, ölçülebilir sonuçlar üreten hizmet paketleri.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">📊</div>
+        <div class="service-title">Strateji Danışmanlığı</div>
+        <p class="service-desc">Pazar analizi ve rekabetçi konumlandırma ile uzun vadeli büyüme stratejinizi birlikte oluşturuyoruz.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🚀</div>
+        <div class="service-title">Dijital Dönüşüm</div>
+        <p class="service-desc">Operasyonel süreçlerinizi dijitalleştirerek verimliliği artırıyor, maliyetleri düşürüyoruz.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🎯</div>
+        <div class="service-title">Performans Yönetimi</div>
+        <p class="service-desc">KPI belirleme, ölçüm ve sürekli iyileştirme süreçleriyle ekibinizin potansiyelini açığa çıkarıyoruz.</p>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🤝</div>
+        <div class="service-title">Kurumsal Koçluk</div>
+        <p class="service-desc">Liderlik gelişimi ve organizasyonel değişim yönetimi alanında birebir koçluk programları.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="pricing">
+    <div class="pricing-header">
+      <p class="eyebrow">Fiyatlandırma</p>
+      <h2 class="section-h2">Şeffaf ve adil fiyatlar</h2>
+      <p>İhtiyacınıza uygun paketi seçin, ilk seans ücretsiz.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <div class="pricing-card">
+        <div class="plan-name">Başlangıç</div>
+        <div class="plan-price"><sup>₺</sup>2.900</div>
+        <div class="plan-period">/ ay</div>
+        <ul class="plan-features">
+          <li>Aylık 2 danışmanlık seansı</li>
+          <li>Strateji raporu</li>
+          <li>E-posta desteği</li>
+          <li>Temel KPI takibi</li>
+        </ul>
+        <a href="#contact" class="plan-btn outline">Başla</a>
+      </div>
+
+      <div class="pricing-card featured">
+        <div class="featured-badge">En Popüler</div>
+        <div class="plan-name">Profesyonel</div>
+        <div class="plan-price"><sup>₺</sup>5.900</div>
+        <div class="plan-period">/ ay</div>
+        <ul class="plan-features">
+          <li>Aylık 5 danışmanlık seansı</li>
+          <li>Kapsamlı strateji planı</li>
+          <li>Öncelikli destek</li>
+          <li>Detaylı KPI analizi</li>
+          <li>Aylık ilerleme raporu</li>
+        </ul>
+        <a href="#contact" class="plan-btn solid">Başla</a>
+      </div>
+
+      <div class="pricing-card">
+        <div class="plan-name">Kurumsal</div>
+        <div class="plan-price"><sup>₺</sup>9.900</div>
+        <div class="plan-period">/ ay</div>
+        <ul class="plan-features">
+          <li>Sınırsız danışmanlık</li>
+          <li>Özel strateji ekibi</li>
+          <li>7/24 öncelikli destek</li>
+          <li>Tam KPI yönetimi</li>
+          <li>Haftalık ilerleme toplantısı</li>
+        </ul>
+        <a href="#contact" class="plan-btn outline">İletişime Geç</a>
+      </div>
+
+    </div>
+  </section>
+
+  
+  <section id="contact">
+    <p class="eyebrow">İletişim</p>
+    <h2 class="section-h2">Ücretsiz keşif seansı<br>için bize yazın</h2>
+    <p>24 saat içinde dönüş yapıyoruz.</p>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <input type="text" placeholder="Adınız Soyadınız" required>
+      <input type="email" placeholder="E-posta adresiniz" required>
+      <textarea placeholder="Bize ne konuda danışmak istersiniz?"></textarea>
+      <button type="submit">Gönder</button>
+    </form>
+  </section>
+
+  <footer>
+    <a href="../index.html" class="back-link">← Ali Demirbilek'in Portfolyosuna Dön</a>
+    <p>Bu sayfa Ali Demirbilek tarafından demo amaçlı geliştirilmiştir.</p>
+  </footer>
+
+  <script>
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.textContent = '✓ Gönderildi!';
+      btn.style.background = '#10B981';
+      setTimeout(() => {
+        btn.textContent = 'Gönder';
+        btn.style.background = '';
+        e.target.reset();
+      }, 2500);
+    }
+
+
+    const cards = document.querySelectorAll('.service-card, .pricing-card');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.style.opacity = '1', i * 100);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    cards.forEach(c => { c.style.opacity = '0'; c.style.transition = 'opacity 0.5s ease'; obs.observe(c); });
+  </script>
+
+</body>
+</html>
