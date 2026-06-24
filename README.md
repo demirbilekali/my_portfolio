@@ -2,7 +2,7 @@
 
 Kişisel portfolyo websitem. HTML5, CSS3 ve JavaScript ile sıfırdan geliştirildi.
 
-**Canlı Site:** [demirbilekali.github.io/portfolio](https://demirbilekali.github.io/portfolio)
+**Canlı Site:** [demirbilekali.github.io/my_portfolio](https://demirbilekali.github.io/my_portfolio)
 
 ---
 
