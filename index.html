@@ -3,463 +3,653 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NexaConsult — Kurumsal Landing Page Demo</title>
+  <meta name="description" content="Ali Demirbilek — Junior Web Developer. WordPress, HTML5, CSS3 ve JavaScript ile frontend geliştirme.">
+  <title>Ali Demirbilek | Junior Web Developer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --primary: #0B3D91;
-      --accent:  #1A73E8;
-      --light:   #F4F7FD;
-      --white:   #FFFFFF;
-      --text:    #1C2B4A;
-      --muted:   #5E6E8A;
-      --border:  #DDE4EF;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--white); }
 
-    
+    :root {
+      --navy:   #0F172A;
+      --blue:   #3B82F6;
+      --blue-d: #1D4ED8;
+      --slate:  #64748B;
+      --light:  #F8FAFC;
+      --white:  #FFFFFF;
+      --border: #E2E8F0;
+      --card:   #FFFFFF;
+      --text:   #1E293B;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* NAV */
     nav {
       position: fixed; top: 0; width: 100%; z-index: 100;
-      background: rgba(255,255,255,0.96); backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       display: flex; justify-content: space-between; align-items: center;
-      padding: 0 6%; height: 64px;
+      padding: 0 5%; height: 60px;
     }
-    .logo {
+    .nav-name {
       font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 1.3rem; color: var(--primary);
-      letter-spacing: -0.03em;
+      font-weight: 700; font-size: 1.1rem;
+      color: var(--white);
+      letter-spacing: -0.02em;
     }
-    .logo span { color: var(--accent); }
+    .nav-name span { color: var(--blue); }
     .nav-links { display: flex; gap: 28px; list-style: none; }
-    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--primary); }
-    .nav-cta {
-      background: var(--accent); color: var(--white);
-      padding: 9px 22px; border-radius: 6px;
-      text-decoration: none; font-size: 0.87rem; font-weight: 600;
-      transition: background 0.2s;
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none; font-size: 0.88rem;
+      font-weight: 500; letter-spacing: 0.02em;
+      transition: color 0.2s;
     }
-    .nav-cta:hover { background: var(--primary); }
+    .nav-links a:hover { color: var(--blue); }
 
-    
+    /* HERO */
     #hero {
-      min-height: 100vh; padding-top: 64px;
-      background: linear-gradient(150deg, #071528 0%, #0B3D91 60%, #1A73E8 100%);
+      min-height: 100vh;
+      background: var(--navy);
       display: flex; align-items: center;
-      padding-left: 6%; padding-right: 6%;
+      padding: 0 5%;
       position: relative; overflow: hidden;
     }
-    .hero-bg-circle {
-      position: absolute; border-radius: 50%;
-      background: rgba(255,255,255,0.04);
+    .hero-grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
     }
-    .hero-bg-circle.c1 { width: 600px; height: 600px; top: -200px; right: -150px; }
-    .hero-bg-circle.c2 { width: 300px; height: 300px; bottom: -100px; left: 10%; }
-    .hero-inner { position: relative; z-index: 1; max-width: 700px; }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 20px; padding: 6px 14px;
-      font-size: 0.78rem; color: rgba(255,255,255,0.8);
-      font-weight: 500; letter-spacing: 0.05em;
-      margin-bottom: 28px; text-transform: uppercase;
-    }
-    .hero-badge::before { content: '●'; color: #4ADE80; font-size: 0.6rem; }
-    .hero-h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(2.4rem, 5.5vw, 4rem);
-      font-weight: 800; color: var(--white);
-      line-height: 1.08; letter-spacing: -0.03em;
-      margin-bottom: 22px;
-    }
-    .hero-h1 em { font-style: normal; color: #93C5FD; }
-    .hero-sub {
-      font-size: 1.05rem; color: rgba(255,255,255,0.65);
-      line-height: 1.75; max-width: 520px; margin-bottom: 40px;
-    }
-    .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn-white {
-      background: var(--white); color: var(--primary);
-      padding: 13px 30px; border-radius: 7px;
-      text-decoration: none; font-weight: 700; font-size: 0.92rem;
-      transition: all 0.2s;
-    }
-    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-    .btn-ghost-white {
-      border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85);
-      padding: 13px 30px; border-radius: 7px;
-      text-decoration: none; font-weight: 500; font-size: 0.92rem;
-      transition: all 0.2s;
-    }
-    .btn-ghost-white:hover { border-color: rgba(255,255,255,0.7); color: var(--white); }
-    .hero-stats {
-      display: flex; gap: 40px; margin-top: 56px;
-      padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.12);
-    }
-    .hero-stat-num {
-      font-family: 'Syne', sans-serif;
-      font-size: 2rem; font-weight: 800; color: var(--white);
-    }
-    .hero-stat-label { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
-
-    
-    section { padding: 90px 6%; }
-    .eyebrow {
-      font-size: 0.72rem; font-weight: 700;
-      letter-spacing: 0.15em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 12px;
-    }
-    .section-h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-      font-weight: 700; color: var(--text);
-      letter-spacing: -0.02em; line-height: 1.15;
-    }
-
-    
-    #services { background: var(--light); }
-    .services-header { text-align: center; margin-bottom: 56px; }
-    .services-header .section-h2 { margin-bottom: 16px; }
-    .services-header p { color: var(--muted); font-size: 1rem; max-width: 480px; margin: 0 auto; }
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-    }
-    .service-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 12px; padding: 32px 26px;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .service-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(11,61,145,0.08);
-    }
-    .service-icon {
-      width: 48px; height: 48px; border-radius: 10px;
-      background: linear-gradient(135deg, #EBF3FE, #C7DFFB);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; margin-bottom: 20px;
-    }
-    .service-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.05rem; font-weight: 700;
-      color: var(--text); margin-bottom: 10px;
-    }
-    .service-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
-
-    
-    #pricing { background: var(--white); }
-    .pricing-header { text-align: center; margin-bottom: 56px; }
-    .pricing-header .section-h2 { margin-bottom: 16px; }
-    .pricing-header p { color: var(--muted); font-size: 1rem; }
-    .pricing-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px; max-width: 1000px; margin: 0 auto;
-    }
-    .pricing-card {
-      border: 1px solid var(--border);
-      border-radius: 14px; padding: 36px 30px;
-      position: relative; transition: transform 0.2s;
-    }
-    .pricing-card:hover { transform: translateY(-3px); }
-    .pricing-card.featured {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(26,115,232,0.08);
-    }
-    .featured-badge {
-      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
-      background: var(--accent); color: var(--white);
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
-      padding: 4px 14px; border-radius: 20px; text-transform: uppercase;
-    }
-    .plan-name {
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem; font-weight: 700;
-      color: var(--text); margin-bottom: 10px;
-    }
-    .plan-price {
-      font-family: 'Syne', sans-serif;
-      font-size: 2.6rem; font-weight: 800;
-      color: var(--primary); line-height: 1; margin-bottom: 4px;
-    }
-    .plan-price sup { font-size: 1.2rem; vertical-align: top; margin-top: 8px; }
-    .plan-period { font-size: 0.82rem; color: var(--muted); margin-bottom: 24px; }
-    .plan-features { list-style: none; margin-bottom: 28px; }
-    .plan-features li {
-      font-size: 0.88rem; color: var(--text);
-      padding: 7px 0; border-bottom: 1px solid var(--border);
+    .hero-content { position: relative; z-index: 1; max-width: 760px; }
+    .hero-prompt {
+      font-family: 'Inter', monospace;
+      font-size: 0.95rem; color: var(--blue);
+      margin-bottom: 20px;
       display: flex; align-items: center; gap: 8px;
     }
-    .plan-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
-    .plan-btn {
-      display: block; text-align: center;
-      padding: 12px; border-radius: 7px;
-      font-weight: 600; font-size: 0.9rem;
-      text-decoration: none; transition: all 0.2s;
+    .cursor {
+      display: inline-block; width: 10px; height: 1.1em;
+      background: var(--blue); vertical-align: middle;
+      animation: blink 1.1s step-end infinite;
     }
-    .plan-btn.solid {
-      background: var(--accent); color: var(--white);
-    }
-    .plan-btn.solid:hover { background: var(--primary); }
-    .plan-btn.outline {
-      border: 1.5px solid var(--border); color: var(--text);
-    }
-    .plan-btn.outline:hover { border-color: var(--accent); color: var(--accent); }
+    @keyframes blink { 50% { opacity: 0; } }
 
-    
-    #contact {
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 800; color: var(--white);
+      line-height: 1; letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .hero-name .accent { color: var(--blue); }
+    .hero-role {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: rgba(255,255,255,0.55);
+      font-weight: 400; margin-bottom: 40px;
+      letter-spacing: 0.01em;
+    }
+    .hero-role strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--blue); color: var(--white);
+      padding: 12px 28px; border-radius: 6px;
+      text-decoration: none; font-weight: 600; font-size: 0.9rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--blue-d); transform: translateY(-1px); }
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8);
+      padding: 12px 28px; border-radius: 6px;
+      text-decoration: none; font-weight: 500; font-size: 0.9rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--blue); color: var(--blue); }
+    .hero-scroll {
+      position: absolute; bottom: 36px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      color: rgba(255,255,255,0.3); font-size: 0.75rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, rgba(59,130,246,0.6), transparent);
+      animation: scrollDown 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollDown { 0%,100% { opacity:0.4; transform: scaleY(1); } 50% { opacity:1; } }
+
+    /* SECTIONS */
+    section { padding: 90px 5%; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--blue);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em; margin-bottom: 50px;
+      line-height: 1.2;
+    }
+    .section-title span { color: var(--blue); }
+
+    /* ABOUT */
+    #about { background: var(--white); border-bottom: 1px solid var(--border); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: center;
+    }
+    .about-text p {
+      color: var(--slate); font-size: 1rem;
+      line-height: 1.8; margin-bottom: 16px;
+    }
+    .about-text p strong { color: var(--text); }
+    .about-stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .stat-card {
       background: var(--light);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 24px 20px;
       text-align: center;
     }
-    #contact .section-h2 { margin-bottom: 16px; }
-    #contact p { color: var(--muted); margin-bottom: 36px; font-size: 1rem; }
-    .contact-form {
-      max-width: 520px; margin: 0 auto;
-      display: flex; flex-direction: column; gap: 14px;
+    .stat-number {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.4rem; font-weight: 800;
+      color: var(--blue); line-height: 1;
+      margin-bottom: 6px;
     }
-    .contact-form input,
-    .contact-form textarea {
-      border: 1.5px solid var(--border);
-      border-radius: 8px; padding: 13px 16px;
-      font-family: 'Inter', sans-serif; font-size: 0.92rem;
-      color: var(--text); background: var(--white);
-      transition: border-color 0.2s; outline: none;
+    .stat-label {
+      font-size: 0.8rem; color: var(--slate);
+      font-weight: 500; line-height: 1.3;
     }
-    .contact-form input:focus,
-    .contact-form textarea:focus { border-color: var(--accent); }
-    .contact-form textarea { resize: vertical; min-height: 120px; }
-    .contact-form button {
-      background: var(--accent); color: var(--white);
-      border: none; border-radius: 8px;
-      padding: 14px; font-size: 0.95rem;
-      font-weight: 600; cursor: pointer;
-      transition: background 0.2s;
-    }
-    .contact-form button:hover { background: var(--primary); }
 
-    
+    /* SKILLS */
+    #skills { background: var(--light); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .skill-group {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 22px 20px;
+    }
+    .skill-group-title {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 14px;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag {
+      background: var(--light); border: 1px solid var(--border);
+      border-radius: 4px; padding: 5px 10px;
+      font-size: 0.82rem; color: var(--text);
+      font-weight: 500;
+    }
+
+    /* EXPERIENCE */
+    #experience { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .timeline { position: relative; }
+    .timeline::before {
+      content: ''; position: absolute;
+      left: 10px; top: 6px; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .timeline-item {
+      position: relative;
+      padding-left: 40px; margin-bottom: 48px;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute; left: 0; top: 5px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--white); border: 2px solid var(--blue);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .timeline-dot::after {
+      content: ''; width: 8px; height: 8px;
+      border-radius: 50%; background: var(--blue);
+    }
+    .timeline-meta {
+      display: flex; align-items: baseline;
+      flex-wrap: wrap; gap: 10px; margin-bottom: 6px;
+    }
+    .timeline-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 700; color: var(--text);
+    }
+    .timeline-date {
+      font-size: 0.8rem; color: var(--slate);
+      font-weight: 500;
+    }
+    .timeline-company {
+      font-size: 0.9rem; color: var(--blue);
+      font-weight: 500; margin-bottom: 14px;
+    }
+    .timeline-bullets { list-style: none; }
+    .timeline-bullets li {
+      color: var(--slate); font-size: 0.92rem;
+      line-height: 1.7; padding-left: 16px;
+      position: relative; margin-bottom: 6px;
+    }
+    .timeline-bullets li::before {
+      content: '›'; position: absolute; left: 0;
+      color: var(--blue); font-weight: 700;
+    }
+    .timeline-bullets li strong { color: var(--text); }
+
+    /* PROJECTS */
+    #projects { background: var(--light); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .project-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    }
+    .project-thumb {
+      height: 180px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.8rem; letter-spacing: 0.15em;
+      text-transform: uppercase; font-weight: 600;
+    }
+    .thumb-blue { background: linear-gradient(135deg, #1E3A5F 0%, #1D4ED8 100%); color: rgba(255,255,255,0.6); }
+    .thumb-dark { background: linear-gradient(135deg, #0F172A 0%, #1E2D40 100%); color: rgba(255,255,255,0.5); }
+    .project-body { padding: 24px; }
+    .project-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text); margin-bottom: 8px;
+    }
+    .project-desc {
+      font-size: 0.88rem; color: var(--slate);
+      line-height: 1.7; margin-bottom: 16px;
+    }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
+    .project-tag {
+      background: #EFF6FF; color: #1D4ED8;
+      border-radius: 4px; padding: 3px 9px;
+      font-size: 0.75rem; font-weight: 600;
+    }
+    .project-links { display: flex; gap: 10px; }
+    .project-link {
+      font-size: 0.83rem; font-weight: 600;
+      text-decoration: none; padding: 7px 14px;
+      border-radius: 5px; transition: all 0.2s;
+    }
+    .link-demo {
+      background: var(--blue); color: var(--white);
+    }
+    .link-demo:hover { background: var(--blue-d); }
+    .link-code {
+      border: 1px solid var(--border); color: var(--text);
+    }
+    .link-code:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* CONTACT */
+    #contact {
+      background: var(--navy);
+      text-align: center;
+    }
+    #contact .section-label { color: rgba(59,130,246,0.8); }
+    #contact .section-title { color: var(--white); margin-bottom: 16px; }
+    .contact-sub {
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem; margin-bottom: 40px;
+    }
+    .contact-links {
+      display: flex; justify-content: center;
+      gap: 14px; flex-wrap: wrap;
+    }
+    .contact-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 6px;
+      text-decoration: none; font-weight: 500; font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .contact-link.primary {
+      background: var(--blue); color: var(--white);
+    }
+    .contact-link.primary:hover { background: var(--blue-d); }
+    .contact-link.secondary {
+      border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.8);
+    }
+    .contact-link.secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* FOOTER */
     footer {
-      background: var(--text); color: rgba(255,255,255,0.45);
-      text-align: center; padding: 24px;
-      font-size: 0.8rem;
-    }
-    .back-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      color: rgba(255,255,255,0.6); text-decoration: none;
-      font-size: 0.8rem; transition: color 0.2s;
-      margin-bottom: 8px;
-    }
-    .back-link:hover { color: #93C5FD; }
-
-
-    .demo-notice {
-      position: fixed; bottom: 20px; right: 20px; z-index: 200;
-      background: var(--primary); color: var(--white);
-      padding: 10px 18px; border-radius: 8px;
-      font-size: 0.8rem; font-weight: 600;
-      box-shadow: 0 4px 20px rgba(11,61,145,0.4);
-      display: flex; align-items: center; gap: 10px;
-    }
-    .demo-notice a {
-      color: #93C5FD; text-decoration: none; font-weight: 700;
+      background: #080D18;
+      text-align: center; padding: 20px;
+      color: rgba(255,255,255,0.25); font-size: 0.78rem;
     }
 
+    /* ANIMATIONS */
+    .reveal {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* RESPONSIVE */
     @media (max-width: 768px) {
       nav { padding: 0 4%; }
-      .nav-links { display: none; }
+      .nav-links { gap: 16px; }
+      .nav-links a { font-size: 0.8rem; }
       section { padding: 70px 4%; }
-      .hero-stats { flex-wrap: wrap; gap: 24px; }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .hero-btns { flex-direction: column; max-width: 220px; }
+    }
+    @media (max-width: 480px) {
+      .nav-links { display: none; }
+      .about-stats { grid-template-columns: 1fr 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  
-  <div class="demo-notice">
-    📄 Demo Proje — <a href="../index.html">← Portfolyoya Dön</a>
-  </div>
-
-  
+  <!-- NAV -->
   <nav>
-    <div class="logo">Nexa<span>Consult</span></div>
+    <div class="nav-name">Ali<span>.</span>dev</div>
     <ul class="nav-links">
-      <li><a href="#services">Hizmetler</a></li>
-      <li><a href="#pricing">Fiyatlandırma</a></li>
+      <li><a href="#about">Hakkımda</a></li>
+      <li><a href="#skills">Beceriler</a></li>
+      <li><a href="#experience">Deneyim</a></li>
+      <li><a href="#projects">Projeler</a></li>
       <li><a href="#contact">İletişim</a></li>
     </ul>
-    <a href="#contact" class="nav-cta">Ücretsiz Danışma</a>
   </nav>
 
-  
+  <!-- HERO -->
   <section id="hero">
-    <div class="hero-bg-circle c1"></div>
-    <div class="hero-bg-circle c2"></div>
-    <div class="hero-inner">
-      <div class="hero-badge">Kurumsal & Bireysel Danışmanlık</div>
-      <h1 class="hero-h1">
-        İşinizi bir sonraki<br>seviyeye <em>taşıyın.</em>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-prompt">
+        <span>~/portfolio</span>
+        <span class="cursor"></span>
+      </div>
+      <h1 class="hero-name">
+        Ali<br><span class="accent">Demirbilek</span>
       </h1>
-      <p class="hero-sub">
-        Kurumsal danışmanlık, dijital dönüşüm ve strateji geliştirme alanlarında
-        uzman ekibimizle hedeflerinize ulaşın.
+      <p class="hero-role">
+        <strong>Junior Web Developer</strong> — WordPress & Frontend Development<br>
+        İstanbul, Türkiye
       </p>
-      <div class="hero-actions">
-        <a href="#pricing" class="btn-white">Paketi Seç</a>
-        <a href="#contact" class="btn-ghost-white">Bize Ulaşın</a>
+      <div class="hero-btns">
+        <a href="#projects" class="btn-primary">Projeleri Gör</a>
+        <a href="#contact" class="btn-outline">İletişime Geç</a>
       </div>
-      <div class="hero-stats">
-        <div>
-          <div class="hero-stat-num">500+</div>
-          <div class="hero-stat-label">Mutlu Müşteri</div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="reveal">
+      <p class="section-label">Hakkımda</p>
+      <h2 class="section-title">Kod yazan,<br><span>canlıya alan</span> biriyim.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          İstanbul Gedik Üniversitesi Bilgisayar Programcılığı bölümü öğrencisiyim.
+          Web geliştirme alanındaki deneyimim sınıf içinde kalmadı —
+          <strong>gerçek, canlı sitelerde</strong> HTML, CSS, JavaScript ve WordPress
+          ile çalıştım.
+        </p>
+        <p>
+          Waytogo'da 7 aylık staj boyunca bir kurumsal sitenin
+          <strong>15'in üzerinde sayfasını</strong> sıfırdan düzenledim,
+          4 farklı hizmet paketinin fiyatlandırma tablolarını oluşturdum
+          ve SEO düzenlemelerini üstlendim. Yaptığım her şey doğrudan
+          canlıya alındı.
+        </p>
+        <p>
+          Şu an frontend'de derinleşip kısa vadede backend'e de açılmak istiyorum.
+        </p>
+      </div>
+      <div class="about-stats reveal">
+        <div class="stat-card">
+          <div class="stat-number">9+</div>
+          <div class="stat-label">Ay Uygulamalı Staj</div>
         </div>
-        <div>
-          <div class="hero-stat-num">12</div>
-          <div class="hero-stat-label">Yıl Deneyim</div>
+        <div class="stat-card">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Canlı Sayfa Düzenlendi</div>
         </div>
-        <div>
-          <div class="hero-stat-num">98%</div>
-          <div class="hero-stat-label">Memnuniyet</div>
+        <div class="stat-card">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Kurumda Web Deneyimi</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Fiyatlandırma Tablosu</div>
         </div>
       </div>
     </div>
   </section>
 
-  
-  <section id="services">
-    <div class="services-header">
-      <p class="eyebrow">Hizmetlerimiz</p>
-      <h2 class="section-h2">Her ölçekte işletme için<br>özel çözümler</h2>
-      <p>Kurumsal hedeflerinize uygun, ölçülebilir sonuçlar üreten hizmet paketleri.</p>
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="reveal">
+      <p class="section-label">Beceriler</p>
+      <h2 class="section-title">Kullandığım <span>teknolojiler</span></h2>
     </div>
-    <div class="services-grid">
-      <div class="service-card">
-        <div class="service-icon">📊</div>
-        <div class="service-title">Strateji Danışmanlığı</div>
-        <p class="service-desc">Pazar analizi ve rekabetçi konumlandırma ile uzun vadeli büyüme stratejinizi birlikte oluşturuyoruz.</p>
+    <div class="skills-grid reveal">
+      <div class="skill-group">
+        <div class="skill-group-title">Frontend</div>
+        <div class="skill-tags">
+          <span class="skill-tag">HTML5</span>
+          <span class="skill-tag">CSS3</span>
+          <span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">Responsive Design</span>
+        </div>
       </div>
-      <div class="service-card">
-        <div class="service-icon">🚀</div>
-        <div class="service-title">Dijital Dönüşüm</div>
-        <p class="service-desc">Operasyonel süreçlerinizi dijitalleştirerek verimliliği artırıyor, maliyetleri düşürüyoruz.</p>
+      <div class="skill-group">
+        <div class="skill-group-title">CMS & Web</div>
+        <div class="skill-tags">
+          <span class="skill-tag">WordPress</span>
+          <span class="skill-tag">Tema Özelleştirme</span>
+          <span class="skill-tag">İçerik Yönetimi</span>
+          <span class="skill-tag">Temel SEO</span>
+        </div>
       </div>
-      <div class="service-card">
-        <div class="service-icon">🎯</div>
-        <div class="service-title">Performans Yönetimi</div>
-        <p class="service-desc">KPI belirleme, ölçüm ve sürekli iyileştirme süreçleriyle ekibinizin potansiyelini açığa çıkarıyoruz.</p>
+      <div class="skill-group">
+        <div class="skill-group-title">Araçlar</div>
+        <div class="skill-tags">
+          <span class="skill-tag">VS Code</span>
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">GitHub</span>
+          <span class="skill-tag">MS Office</span>
+        </div>
       </div>
-      <div class="service-card">
-        <div class="service-icon">🤝</div>
-        <div class="service-title">Kurumsal Koçluk</div>
-        <p class="service-desc">Liderlik gelişimi ve organizasyonel değişim yönetimi alanında birebir koçluk programları.</p>
+      <div class="skill-group">
+        <div class="skill-group-title">Programlama</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Java (Temel)</span>
+          <span class="skill-tag">Landing Page</span>
+          <span class="skill-tag">Website Maintenance</span>
+        </div>
       </div>
-    </div>
-  </section>
-
-
-  <section id="pricing">
-    <div class="pricing-header">
-      <p class="eyebrow">Fiyatlandırma</p>
-      <h2 class="section-h2">Şeffaf ve adil fiyatlar</h2>
-      <p>İhtiyacınıza uygun paketi seçin, ilk seans ücretsiz.</p>
-    </div>
-    <div class="pricing-grid">
-
-      <div class="pricing-card">
-        <div class="plan-name">Başlangıç</div>
-        <div class="plan-price"><sup>₺</sup>2.900</div>
-        <div class="plan-period">/ ay</div>
-        <ul class="plan-features">
-          <li>Aylık 2 danışmanlık seansı</li>
-          <li>Strateji raporu</li>
-          <li>E-posta desteği</li>
-          <li>Temel KPI takibi</li>
-        </ul>
-        <a href="#contact" class="plan-btn outline">Başla</a>
-      </div>
-
-      <div class="pricing-card featured">
-        <div class="featured-badge">En Popüler</div>
-        <div class="plan-name">Profesyonel</div>
-        <div class="plan-price"><sup>₺</sup>5.900</div>
-        <div class="plan-period">/ ay</div>
-        <ul class="plan-features">
-          <li>Aylık 5 danışmanlık seansı</li>
-          <li>Kapsamlı strateji planı</li>
-          <li>Öncelikli destek</li>
-          <li>Detaylı KPI analizi</li>
-          <li>Aylık ilerleme raporu</li>
-        </ul>
-        <a href="#contact" class="plan-btn solid">Başla</a>
-      </div>
-
-      <div class="pricing-card">
-        <div class="plan-name">Kurumsal</div>
-        <div class="plan-price"><sup>₺</sup>9.900</div>
-        <div class="plan-period">/ ay</div>
-        <ul class="plan-features">
-          <li>Sınırsız danışmanlık</li>
-          <li>Özel strateji ekibi</li>
-          <li>7/24 öncelikli destek</li>
-          <li>Tam KPI yönetimi</li>
-          <li>Haftalık ilerleme toplantısı</li>
-        </ul>
-        <a href="#contact" class="plan-btn outline">İletişime Geç</a>
-      </div>
-
     </div>
   </section>
 
-  
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="reveal">
+      <p class="section-label">Deneyim</p>
+      <h2 class="section-title">Gerçek sitelerde,<br><span>gerçek işler</span></h2>
+    </div>
+    <div class="timeline">
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-meta">
+          <span class="timeline-title">Web Geliştirme Stajyeri</span>
+          <span class="timeline-date">Kasım 2024 – Mayıs 2025</span>
+        </div>
+        <div class="timeline-company">Waytogo Software and Consulting Services Inc.</div>
+        <ul class="timeline-bullets">
+          <li>7 aylık staj boyunca kurumsal WordPress sitesinin (waytogo.live) <strong>15'in üzerinde sayfasını</strong> HTML, CSS ve JavaScript ile düzenledim.</li>
+          <li>Kurumsal ve bireysel müşteriler için <strong>4 farklı hizmet paketinin</strong> fiyatlandırma tablosunu sıfırdan oluşturdum.</li>
+          <li>SEO eklentisi üzerinden meta açıklama, başlık ve anahtar kelime optimizasyonu yaparak <strong>site genelinde SEO skorlarını yeşil seviyeye</strong> taşıdım.</li>
+          <li>Yaptığım frontend düzenlemeleri doğrudan canlı ortama alınarak sitenin 7 ay boyunca güncel kalmasını sağladım.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-meta">
+          <span class="timeline-title">Web Geliştirme Stajyeri</span>
+          <span class="timeline-date">Ağustos 2025 – Eylül 2025</span>
+        </div>
+        <div class="timeline-company">İstanbul Gedik Üniversitesi</div>
+        <ul class="timeline-bullets">
+          <li>Üniversitenin birkaç SSS sayfasının içerik ve görsel güncellemelerini WordPress üzerinden gerçekleştirdim.</li>
+          <li>WordPress içerik yönetim sistemini ve VS Code'u uygulamalı olarak öğrenip kurumsal sayfa geliştirme sürecine destek verdim.</li>
+        </ul>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-meta">
+          <span class="timeline-title">Tanıtım ve Ofis Destek Görevlisi</span>
+          <span class="timeline-date">Kasım 2024 – Haziran 2026</span>
+        </div>
+        <div class="timeline-company">İstanbul Gedik Üniversitesi · Yarı Zamanlı (Tam zamanlı dönem: Tem–Ağu 2025)</div>
+        <ul class="timeline-bullets">
+          <li>Tam zamanlı dönemde günlük <strong>100+</strong>, yarı zamanlı dönemde günlük <strong>50+</strong> aday öğrenci ve veliyle birebir görüşerek kayıt süreçleri hakkında bilgilendirme sağladım.</li>
+          <li>Şehir içi ve şehir dışı eğitim fuarlarında üniversiteyi temsil ederek <strong>binlerce aday öğrenciye</strong> doğrudan ulaştım.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="reveal">
+      <p class="section-label">Projeler</p>
+      <h2 class="section-title">Yaptığım <span>işler</span></h2>
+    </div>
+    <div class="projects-grid">
+
+      <div class="project-card reveal">
+        <div class="project-thumb thumb-blue">Portfolio Sitesi</div>
+        <div class="project-body">
+          <div class="project-title">Kişisel Portfolio</div>
+          <p class="project-desc">
+            HTML5, CSS3 ve JavaScript ile sıfırdan geliştirdiğim tek sayfalık portfolyo sitesi.
+            Scroll animasyonları, responsive tasarım ve temiz kod yapısı.
+          </p>
+          <div class="project-tags">
+            <span class="project-tag">HTML5</span>
+            <span class="project-tag">CSS3</span>
+            <span class="project-tag">JavaScript</span>
+            <span class="project-tag">Responsive</span>
+          </div>
+          <div class="project-links">
+            <a href="https://demirbilekali.github.io/my_portfolio" class="project-link link-demo">Canlı Site</a>
+            <a href="https://github.com/demirbilekali" target="_blank" class="project-link link-code">GitHub</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal">
+        <div class="project-thumb thumb-dark">Kurumsal Landing Page</div>
+        <div class="project-body">
+          <div class="project-title">Kurumsal Landing Page Demo</div>
+          <p class="project-desc">
+            Waytogo stajında yaptığım kurumsal sayfa düzenlemelerinin "sıfırdan yapabilir miyim" kanıtı.
+            Hero, hizmetler, fiyatlandırma ve iletişim bölümleri içeren tam sayfalık demo.
+          </p>
+          <div class="project-tags">
+            <span class="project-tag">HTML5</span>
+            <span class="project-tag">CSS3</span>
+            <span class="project-tag">JavaScript</span>
+            <span class="project-tag">Landing Page</span>
+          </div>
+          <div class="project-links">
+            <a href="demo/index.html" class="project-link link-demo">Demoyu Gör</a>
+            <a href="https://github.com/demirbilekali" target="_blank" class="project-link link-code">GitHub</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
   <section id="contact">
-    <p class="eyebrow">İletişim</p>
-    <h2 class="section-h2">Ücretsiz keşif seansı<br>için bize yazın</h2>
-    <p>24 saat içinde dönüş yapıyoruz.</p>
-    <form class="contact-form" onsubmit="handleSubmit(event)">
-      <input type="text" placeholder="Adınız Soyadınız" required>
-      <input type="email" placeholder="E-posta adresiniz" required>
-      <textarea placeholder="Bize ne konuda danışmak istersiniz?"></textarea>
-      <button type="submit">Gönder</button>
-    </form>
+    <p class="section-label reveal">İletişim</p>
+    <h2 class="section-title reveal">Çalışmaya<br><span>hazırım.</span></h2>
+    <p class="contact-sub reveal">alidemirbilek.99@gmail.com</p>
+    <div class="contact-links reveal">
+      <a href="mailto:alidemirbilek.99@gmail.com" class="contact-link primary">Mail Gönder</a>
+      <a href="https://linkedin.com/in/alidemirbilekk" target="_blank" class="contact-link secondary">LinkedIn</a>
+      <a href="https://github.com/demirbilekali" target="_blank" class="contact-link secondary">GitHub</a>
+    </div>
   </section>
 
   <footer>
-    <a href="../index.html" class="back-link">← Ali Demirbilek'in Portfolyosuna Dön</a>
-    <p>Bu sayfa Ali Demirbilek tarafından demo amaçlı geliştirilmiştir.</p>
+    <p>© 2026 Ali Demirbilek · HTML, CSS & JavaScript ile yapıldı</p>
   </footer>
 
   <script>
-    function handleSubmit(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button');
-      btn.textContent = '✓ Gönderildi!';
-      btn.style.background = '#10B981';
-      setTimeout(() => {
-        btn.textContent = 'Gönder';
-        btn.style.background = '';
-        e.target.reset();
-      }, 2500);
-    }
-
-
-    const cards = document.querySelectorAll('.service-card, .pricing-card');
-    const obs = new IntersectionObserver(entries => {
-      entries.forEach((e, i) => {
-        if (e.isIntersecting) {
-          setTimeout(() => e.target.style.opacity = '1', i * 100);
-          obs.unobserve(e.target);
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
-    cards.forEach(c => { c.style.opacity = '0'; c.style.transition = 'opacity 0.5s ease'; obs.observe(c); });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Active nav link on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 80) current = s.getAttribute('id');
+      });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current
+          ? 'var(--blue)' : '';
+      });
+    });
   </script>
 
 </body>
