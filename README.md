@@ -40,7 +40,7 @@ Hero, hizmetler, fiyatlandırma tablosu (3 paket) ve iletişim formu içeriyor.
 ```bash
 git clone https://github.com/demirbilekali/portfolio.git
 cd portfolio
-
+# index.html'i doğrudan tarayıcıda aç
 ```
 
 ---
