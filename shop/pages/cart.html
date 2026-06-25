@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sepetim — TechShop</title>
+  <style id="sharedStyles"></style>
+  <style>
+    .cart-wrap { max-width:1100px; margin:0 auto; padding:40px 5%; }
+    .page-title { font-family:'Syne',sans-serif; font-size:clamp(1.6rem,3vw,2.2rem); font-weight:800; margin-bottom:32px; letter-spacing:-0.02em; }
+    .page-title span { color:var(--blue); }
+    .cart-layout { display:grid; grid-template-columns:1fr 360px; gap:24px; align-items:start; }
+
+    .cart-items { display:flex; flex-direction:column; gap:14px; }
+    .cart-item { background:var(--navy-2); border:1px solid var(--border); border-radius:12px; padding:18px; display:flex; gap:16px; align-items:center; transition:border-color 0.2s; }
+    .cart-item:hover { border-color:rgba(255,255,255,0.15); }
+    .cart-item-img { background:var(--navy-3); border-radius:10px; width:70px; height:70px; display:flex; align-items:center; justify-content:center; font-size:2.2rem; flex-shrink:0; }
+    .cart-item-info { flex:1; min-width:0; }
+    .cart-item-name { font-family:'Syne',sans-serif; font-size:0.95rem; font-weight:700; margin-bottom:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .cart-item-cat { font-size:0.75rem; color:var(--blue); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:8px; }
+    .cart-item-price { font-family:'Syne',sans-serif; font-size:1.05rem; font-weight:800; }
+    .cart-item-controls { display:flex; align-items:center; gap:12px; }
+    .qty-ctrl { display:flex; align-items:center; border:1.5px solid var(--border); border-radius:8px; overflow:hidden; }
+    .qty-btn { background:var(--navy-3); border:none; color:var(--white); width:32px; height:32px; font-size:1rem; cursor:pointer; transition:background 0.2s; }
+    .qty-btn:hover { background:var(--blue); }
+    .qty-num { background:var(--navy-2); min-width:36px; height:32px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:0.88rem; }
+    .remove-btn { background:transparent; border:1px solid var(--border); color:var(--slate); border-radius:6px; padding:5px 10px; font-size:0.75rem; cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.2s; }
+    .remove-btn:hover { border-color:var(--red); color:var(--red); }
+
+    .order-card { background:var(--navy-2); border:1px solid var(--border); border-radius:14px; padding:24px; position:sticky; top:80px; }
+    .order-title { font-family:'Syne',sans-serif; font-size:1rem; font-weight:700; margin-bottom:20px; }
+    .order-row { display:flex; justify-content:space-between; font-size:0.88rem; color:var(--slate); margin-bottom:10px; }
+    .order-divider { height:1px; background:var(--border); margin:14px 0; }
+    .order-total { display:flex; justify-content:space-between; font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:800; margin-bottom:20px; }
+    .checkout-btn { width:100%; background:var(--blue); color:#fff; border:none; border-radius:10px; padding:14px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; transition:background 0.2s; margin-bottom:10px; }
+    .checkout-btn:hover { background:var(--blue-d); }
+    .continue-btn { width:100%; background:transparent; border:1px solid var(--border); color:var(--slate); border-radius:10px; padding:12px; font-family:'Inter',sans-serif; font-size:0.88rem; cursor:pointer; transition:all 0.2s; }
+    .continue-btn:hover { border-color:var(--white); color:var(--white); }
+    .secure-badges { display:flex; gap:14px; margin-top:16px; flex-wrap:wrap; }
+    .secure-badge { font-size:0.72rem; color:var(--slate); display:flex; align-items:center; gap:4px; }
+
+    .coupon-row { display:flex; gap:8px; margin-bottom:16px; }
+    .coupon-input { flex:1; background:var(--navy-3); border:1.5px solid var(--border); border-radius:8px; padding:9px 12px; color:var(--white); font-family:'Inter',sans-serif; font-size:0.83rem; outline:none; }
+    .coupon-input:focus { border-color:var(--blue); }
+    .coupon-btn { background:var(--navy-3); border:1.5px solid var(--border); color:var(--white); border-radius:8px; padding:9px 14px; font-family:'Inter',sans-serif; font-size:0.82rem; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+    .coupon-btn:hover { border-color:var(--blue); color:var(--blue); }
+
+    .empty-cart { text-align:center; padding:80px 20px; color:var(--slate); }
+    .empty-cart .big { font-size:4rem; margin-bottom:16px; }
+    .empty-cart p { margin-bottom:24px; font-size:1rem; }
+
+    .checkout-form { display:none; }
+    .checkout-form.open { display:block; }
+    .form-section { background:var(--navy-2); border:1px solid var(--border); border-radius:12px; padding:22px; margin-bottom:16px; }
+    .form-section-title { font-family:'Syne',sans-serif; font-size:0.9rem; font-weight:700; margin-bottom:16px; color:var(--slate); text-transform:uppercase; letter-spacing:0.08em; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-field { display:flex; flex-direction:column; gap:5px; }
+    .form-field label { font-size:0.78rem; font-weight:600; color:var(--slate); }
+    .form-field input, .form-field select {
+      background:var(--navy-3); border:1.5px solid var(--border);
+      border-radius:7px; padding:10px 12px;
+      color:var(--white); font-family:'Inter',sans-serif; font-size:0.88rem;
+      outline:none; transition:border-color 0.2s;
+    }
+    .form-field input:focus, .form-field select:focus { border-color:var(--blue); }
+    .form-field.full { grid-column:1/-1; }
+    .place-order-btn { width:100%; background:var(--green); color:#fff; border:none; border-radius:10px; padding:15px; font-family:'Inter',sans-serif; font-size:1rem; font-weight:700; cursor:pointer; transition:filter 0.2s; margin-top:8px; }
+    .place-order-btn:hover { filter:brightness(1.1); }
+
+    .success-msg { text-align:center; padding:60px 20px; display:none; }
+    .success-msg .big { font-size:4rem; margin-bottom:16px; }
+    .success-msg h2 { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; margin-bottom:10px; }
+    .success-msg p { color:var(--slate); margin-bottom:24px; }
+
+    @media(max-width:768px) { .cart-layout { grid-template-columns:1fr; } .form-grid { grid-template-columns:1fr; } }
+  </style>
+  <script src="../js/data.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">Tech<span>Shop</span></a>
+  <div class="nav-search">
+    <input type="text" placeholder="Ürün ara..." onkeydown="if(event.key==='Enter') window.location='products.html?q='+this.value">
+    <button>🔍</button>
+  </div>
+  <div class="nav-actions">
+    <a href="products.html" class="nav-link">Ürünler</a>
+    <button class="cart-btn" onclick="window.location='cart.html'">🛒 Sepet <span id="cartBadge"></span></button>
+  </div>
+</nav>
+
+<div class="cart-wrap">
+  <h1 class="page-title">Sepetim <span id="cartCountTitle"></span></h1>
+
+  <div id="emptyCart" class="empty-cart" style="display:none">
+    <div class="big">🛒</div>
+    <p>Sepetiniz boş.</p>
+    <a href="products.html" style="background:var(--blue);color:#fff;padding:12px 28px;border-radius:8px;font-weight:600;font-size:0.92rem;">Alışverişe Başla</a>
+  </div>
+
+  <div id="successMsg" class="success-msg">
+    <div class="big">🎉</div>
+    <h2>Siparişiniz Alındı!</h2>
+    <p>Teşekkürler! Siparişiniz kısa sürede kargoya verilecektir.</p>
+    <a href="../index.html" style="background:var(--blue);color:#fff;padding:12px 28px;border-radius:8px;font-weight:600;font-size:0.92rem;">Ana Sayfaya Dön</a>
+  </div>
+
+  <div id="cartLayout" class="cart-layout">
+    <div>
+      <div class="cart-items" id="cartItems"></div>
+      <div class="checkout-form" id="checkoutForm">
+        <div style="height:24px"></div>
+        <div class="form-section">
+          <div class="form-section-title">📦 Teslimat Bilgileri</div>
+          <div class="form-grid">
+            <div class="form-field"><label>Ad</label><input type="text" placeholder="Ali"></div>
+            <div class="form-field"><label>Soyad</label><input type="text" placeholder="Demirbilek"></div>
+            <div class="form-field full"><label>E-posta</label><input type="email" placeholder="ornek@email.com"></div>
+            <div class="form-field full"><label>Telefon</label><input type="tel" placeholder="0532 000 00 00"></div>
+            <div class="form-field full"><label>Adres</label><input type="text" placeholder="Mahalle, Sokak, Bina No"></div>
+            <div class="form-field"><label>İl</label>
+              <select>
+                <option>İstanbul</option><option>Ankara</option><option>İzmir</option>
+                <option>Bursa</option><option>Antalya</option><option>Diğer</option>
+              </select>
+            </div>
+            <div class="form-field"><label>Posta Kodu</label><input type="text" placeholder="34000"></div>
+          </div>
+        </div>
+        <div class="form-section">
+          <div class="form-section-title">💳 Ödeme Bilgileri</div>
+          <div class="form-grid">
+            <div class="form-field full"><label>Kart Numarası</label><input type="text" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCard(this)"></div>
+            <div class="form-field full"><label>Kart Üzerindeki İsim</label><input type="text" placeholder="ALİ DEMİRBİLEK"></div>
+            <div class="form-field"><label>Son Kullanma</label><input type="text" placeholder="AA/YY" maxlength="5"></div>
+            <div class="form-field"><label>CVV</label><input type="text" placeholder="123" maxlength="3"></div>
+          </div>
+        </div>
+        <button class="place-order-btn" onclick="placeOrder()">✓ Siparişi Tamamla</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="order-card" id="orderCard">
+        <div class="order-title">Sipariş Özeti</div>
+        <div id="orderLines"></div>
+        <div class="coupon-row">
+          <input type="text" class="coupon-input" placeholder="İndirim kodu" id="couponInput">
+          <button class="coupon-btn" onclick="applyCoupon()">Uygula</button>
+        </div>
+        <div class="order-divider"></div>
+        <div class="order-row"><span>Ara Toplam</span><span id="subtotal"></span></div>
+        <div class="order-row"><span>Kargo</span><span id="shipping"></span></div>
+        <div class="order-row" id="discountRow" style="display:none;color:var(--green)"><span>İndirim (SHOP10)</span><span id="discountAmt"></span></div>
+        <div class="order-divider"></div>
+        <div class="order-total"><span>Toplam</span><span id="totalPrice"></span></div>
+        <button class="checkout-btn" id="checkoutBtn" onclick="toggleCheckout()">Ödemeye Geç →</button>
+        <button class="continue-btn" onclick="window.location='products.html'">← Alışverişe Devam Et</button>
+        <div class="secure-badges">
+          <span class="secure-badge">🔒 SSL Güvenli</span>
+          <span class="secure-badge">✅ 256-bit şifreleme</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 TechShop</div>
+    <div class="footer-dev">Ali Demirbilek tarafından geliştirildi · <a href="../../index.html">Portfolyo</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('sharedStyles').textContent = SHARED_STYLES;
+  let couponApplied = false;
+  let checkoutOpen = false;
+
+  function renderCart() {
+    const cart = getCart();
+    const count = getCartCount();
+    document.getElementById('cartCountTitle').textContent = count > 0 ? `(${count} ürün)` : '';
+    updateCartBadge();
+
+    if (!cart.length) {
+      document.getElementById('emptyCart').style.display = 'block';
+      document.getElementById('cartLayout').style.display = 'none';
+      return;
+    }
+
+    document.getElementById('cartItems').innerHTML = cart.map(item => {
+      const p = PRODUCTS.find(p => p.id === item.id);
+      if (!p) return '';
+      return `
+        <div class="cart-item">
+          <div class="cart-item-img">${p.img}</div>
+          <div class="cart-item-info">
+            <div class="cart-item-name">${p.name}</div>
+            <div class="cart-item-cat">${p.category}</div>
+            <div class="cart-item-price">${formatPrice(p.price)}</div>
+          </div>
+          <div class="cart-item-controls">
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeItemQty(${p.id}, -1)">−</button>
+              <div class="qty-num">${item.qty}</div>
+              <button class="qty-btn" onclick="changeItemQty(${p.id}, 1)">+</button>
+            </div>
+            <button class="remove-btn" onclick="removeItem(${p.id})">Sil</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    const subtotal = getCartTotal();
+    const shipping = subtotal > 2000 ? 0 : 49.99;
+    const discount = couponApplied ? Math.round(subtotal * 0.1) : 0;
+    const total = subtotal + shipping - discount;
+
+    document.getElementById('orderLines').innerHTML = cart.map(item => {
+      const p = PRODUCTS.find(p => p.id === item.id);
+      return `<div class="order-row"><span>${p.name} ×${item.qty}</span><span>${formatPrice(p.price * item.qty)}</span></div>`;
+    }).join('');
+
+    document.getElementById('subtotal').textContent = formatPrice(subtotal);
+    document.getElementById('shipping').textContent = shipping === 0 ? 'Ücretsiz' : formatPrice(shipping);
+    document.getElementById('totalPrice').textContent = formatPrice(total);
+
+    if (couponApplied) {
+      document.getElementById('discountRow').style.display = 'flex';
+      document.getElementById('discountAmt').textContent = '-' + formatPrice(discount);
+    }
+  }
+
+  function changeItemQty(id, delta) {
+    const cart = getCart();
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) { removeFromCart(id); }
+    else { saveCart(cart); }
+    renderCart();
+  }
+
+  function removeItem(id) { removeFromCart(id); renderCart(); }
+
+  function applyCoupon() {
+    const code = document.getElementById('couponInput').value.trim().toUpperCase();
+    if (code === 'SHOP10') { couponApplied = true; showToast('%10 indirim uygulandı!'); renderCart(); }
+    else showToast('Geçersiz kupon kodu.');
+  }
+
+  function toggleCheckout() {
+    checkoutOpen = !checkoutOpen;
+    document.getElementById('checkoutForm').classList.toggle('open', checkoutOpen);
+    document.getElementById('checkoutBtn').textContent = checkoutOpen ? '↑ Formu Kapat' : 'Ödemeye Geç →';
+  }
+
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g, '').substring(0, 16);
+    input.value = v.replace(/(.{4})/g, '$1 ').trim();
+  }
+
+  function placeOrder() {
+    saveCart([]);
+    document.getElementById('cartLayout').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+    updateCartBadge();
+  }
+
+  window.changeItemQty = changeItemQty;
+  window.removeItem = removeItem;
+  renderCart();
+</script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechShop — Teknoloji & Aksesuar</title>
+  <style id="sharedStyles"></style>
+  <style>
+    .hero {
+      background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#1d4ed8 100%);
+      padding:80px 5%; display:flex; align-items:center;
+      gap:40px; min-height:500px; position:relative; overflow:hidden;
+    }
+    .hero::before {
+      content:''; position:absolute; top:-100px; right:-100px;
+      width:500px; height:500px; border-radius:50%;
+      background:rgba(59,130,246,0.08);
+    }
+    .hero::after {
+      content:''; position:absolute; bottom:-80px; right:20%;
+      width:300px; height:300px; border-radius:50%;
+      background:rgba(139,92,246,0.06);
+    }
+    .hero-content { position:relative; z-index:1; max-width:600px; }
+    .hero-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.15); border-radius:20px; padding:6px 14px; font-size:0.78rem; color:rgba(255,255,255,0.8); font-weight:500; margin-bottom:24px; }
+    .hero-badge::before { content:'🔥'; }
+    .hero-h1 { font-family:'Syne',sans-serif; font-size:clamp(2.2rem,5vw,3.8rem); font-weight:800; line-height:1.05; letter-spacing:-0.03em; margin-bottom:18px; }
+    .hero-h1 em { font-style:normal; color:#93C5FD; }
+    .hero-sub { font-size:1rem; color:rgba(255,255,255,0.6); line-height:1.75; margin-bottom:36px; max-width:460px; }
+    .hero-btns { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-primary { background:var(--white); color:var(--navy); padding:13px 28px; border-radius:8px; font-weight:700; font-size:0.92rem; transition:all 0.2s; }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.2); }
+    .btn-ghost { border:1.5px solid rgba(255,255,255,0.25); color:rgba(255,255,255,0.8); padding:13px 28px; border-radius:8px; font-weight:500; font-size:0.92rem; transition:all 0.2s; }
+    .btn-ghost:hover { border-color:rgba(255,255,255,0.6); }
+    .hero-stats { display:flex; gap:36px; margin-top:48px; padding-top:36px; border-top:1px solid rgba(255,255,255,0.1); }
+    .hero-stat-n { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; }
+    .hero-stat-l { font-size:0.75rem; color:rgba(255,255,255,0.45); margin-top:2px; }
+
+    section { padding:70px 5%; }
+    .sec-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px; }
+    .sec-label { font-size:0.72rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--blue); margin-bottom:6px; }
+    .sec-title { font-family:'Syne',sans-serif; font-size:clamp(1.5rem,3vw,2rem); font-weight:700; letter-spacing:-0.02em; }
+    .sec-link { font-size:0.85rem; color:var(--blue); font-weight:600; white-space:nowrap; }
+    .sec-link:hover { text-decoration:underline; }
+
+    .cats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:14px; margin-bottom:60px; }
+    .cat-card { background:var(--navy-2); border:1px solid var(--border); border-radius:12px; padding:20px 16px; text-align:center; cursor:pointer; transition:all 0.2s; }
+    .cat-card:hover { border-color:var(--blue); transform:translateY(-3px); }
+    .cat-icon { font-size:2rem; margin-bottom:10px; }
+    .cat-name { font-family:'Syne',sans-serif; font-size:0.88rem; font-weight:700; margin-bottom:4px; }
+    .cat-count { font-size:0.75rem; color:var(--slate); }
+
+    .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:18px; }
+
+    .banner {
+      background:linear-gradient(135deg,#1e1b4b,#4f46e5);
+      border-radius:16px; padding:48px 5%; margin:0 5% 60px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:24px; flex-wrap:wrap; border:1px solid rgba(99,102,241,0.3);
+    }
+    .banner-text h2 { font-family:'Syne',sans-serif; font-size:clamp(1.4rem,3vw,2rem); font-weight:800; margin-bottom:8px; }
+    .banner-text p { color:rgba(255,255,255,0.6); font-size:0.95rem; }
+    .banner-btn { background:#fff; color:#1e1b4b; padding:13px 28px; border-radius:8px; font-weight:700; font-size:0.92rem; white-space:nowrap; transition:all 0.2s; }
+    .banner-btn:hover { transform:scale(1.04); }
+  </style>
+  <script src="js/data.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Tech<span>Shop</span></a>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Ürün ara..." onkeydown="if(event.key==='Enter') goSearch()">
+    <button onclick="goSearch()">🔍</button>
+  </div>
+  <div class="nav-actions">
+    <a href="pages/products.html" class="nav-link">Ürünler</a>
+    <button class="cart-btn" onclick="window.location='pages/cart.html'">
+      🛒 Sepet
+      <span id="cartBadge"></span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero" style="padding:80px 5%">
+  <div class="hero-content">
+    <div class="hero-badge">Yaz İndirimi — %40'a kadar</div>
+    <h1 class="hero-h1">En iyi teknoloji,<br>en <em>uygun fiyata.</em></h1>
+    <p class="hero-sub">Elektronik, aksesuar ve kitap kategorilerinde 500'den fazla ürün. Hızlı kargo, kolay iade.</p>
+    <div class="hero-btns">
+      <a href="pages/products.html" class="btn-primary">Alışverişe Başla</a>
+      <a href="pages/products.html?cat=elektronik" class="btn-ghost">Elektroniği Gör</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-n">500+</div><div class="hero-stat-l">Ürün</div></div>
+      <div><div class="hero-stat-n">12K+</div><div class="hero-stat-l">Müşteri</div></div>
+      <div><div class="hero-stat-n">4.8★</div><div class="hero-stat-l">Ortalama Puan</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-label">Kategoriler</div>
+  <div class="sec-title" style="margin-bottom:24px">Ne arıyorsunuz?</div>
+  <div class="cats-grid" id="catsGrid"></div>
+</section>
+
+<section style="padding-top:0">
+  <div class="sec-header">
+    <div>
+      <div class="sec-label">Öne Çıkanlar</div>
+      <div class="sec-title">Çok Satanlar</div>
+    </div>
+    <a href="pages/products.html" class="sec-link">Tümünü Gör →</a>
+  </div>
+  <div class="products-grid" id="featuredGrid"></div>
+</section>
+
+<div class="banner">
+  <div class="banner-text">
+    <h2>📚 Programlama Kitapları</h2>
+    <p>Kariyer gelişiminiz için seçilmiş kaynak seti</p>
+  </div>
+  <a href="pages/products.html?cat=kitap" class="banner-btn">Kitapları Gör →</a>
+</div>
+
+<section style="padding-top:0">
+  <div class="sec-header">
+    <div>
+      <div class="sec-label">Fırsatlar</div>
+      <div class="sec-title">İndirimli Ürünler</div>
+    </div>
+    <a href="pages/products.html" class="sec-link">Tümünü Gör →</a>
+  </div>
+  <div class="products-grid" id="discountGrid"></div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Tech<span>Shop</span></div>
+      <p class="footer-desc">Teknoloji meraklıları için kurulmuş, güvenilir alışveriş platformu.</p>
+    </div>
+    <div>
+      <div class="footer-title">Kategoriler</div>
+      <ul class="footer-links">
+        <li><a href="pages/products.html?cat=elektronik">Elektronik</a></li>
+        <li><a href="pages/products.html?cat=aksesuar">Aksesuar</a></li>
+        <li><a href="pages/products.html?cat=kitap">Kitaplar</a></li>
+        <li><a href="pages/products.html?cat=kırtasiye">Kırtasiye</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Hesap</div>
+      <ul class="footer-links">
+        <li><a href="pages/cart.html">Sepetim</a></li>
+        <li><a href="#">Siparişlerim</a></li>
+        <li><a href="#">Favorilerim</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-title">Yardım</div>
+      <ul class="footer-links">
+        <li><a href="#">İade Politikası</a></li>
+        <li><a href="#">Gizlilik</a></li>
+        <li><a href="#">İletişim</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 TechShop</div>
+    <div class="footer-dev">Ali Demirbilek tarafından geliştirildi · <a href="../index.html">Portfolyo</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('sharedStyles').textContent = SHARED_STYLES;
+
+  const cats = [
+    { name:'Elektronik', icon:'💻', cat:'elektronik' },
+    { name:'Aksesuar',   icon:'🎒', cat:'aksesuar' },
+    { name:'Kırtasiye',  icon:'✏️', cat:'kırtasiye' },
+    { name:'Kitaplar',   icon:'📚', cat:'kitap' },
+  ];
+  document.getElementById('catsGrid').innerHTML = cats.map(c => `
+    <div class="cat-card" onclick="window.location='pages/products.html?cat=${c.cat}'">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-count">${PRODUCTS.filter(p=>p.category===c.cat).length} ürün</div>
+    </div>`).join('');
+
+  const topSellers = PRODUCTS.filter(p => p.badge === 'Çok Satan' || p.reviews > 300).slice(0, 8);
+  document.getElementById('featuredGrid').innerHTML = topSellers.map(p => productCardHTML(p)).join('');
+
+  const discounted = PRODUCTS.filter(p => p.oldPrice).slice(0, 4);
+  document.getElementById('discountGrid').innerHTML = discounted.map(p => productCardHTML(p)).join('');
+
+  function goSearch() {
+    const q = document.getElementById('searchInput').value.trim();
+    if (q) window.location = 'pages/products.html?q=' + encodeURIComponent(q);
+  }
+
+  updateCartBadge();
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ürün Detayı — TechShop</title>
+  <style id="sharedStyles"></style>
+  <style>
+    .detail-wrap { max-width:1000px; margin:0 auto; padding:40px 5%; }
+    .breadcrumb { font-size:0.8rem; color:var(--slate); margin-bottom:28px; display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+    .breadcrumb a { color:var(--slate); transition:color 0.2s; }
+    .breadcrumb a:hover { color:var(--blue); }
+    .breadcrumb span { color:rgba(255,255,255,0.3); }
+
+    .product-layout { display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+    .product-visual { background:var(--navy-2); border:1px solid var(--border); border-radius:16px; aspect-ratio:1; display:flex; align-items:center; justify-content:center; position:relative; }
+    .product-big-emoji { font-size:8rem; }
+    .product-badge-big { position:absolute; top:16px; left:16px; background:var(--blue); color:#fff; font-size:0.78rem; font-weight:700; padding:5px 12px; border-radius:6px; }
+    .discount-badge-big { position:absolute; top:16px; right:16px; background:var(--red); color:#fff; font-size:0.78rem; font-weight:700; padding:5px 12px; border-radius:6px; }
+
+    .product-info { display:flex; flex-direction:column; }
+    .product-cat-tag { font-size:0.72rem; font-weight:700; color:var(--blue); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px; }
+    .product-title { font-family:'Syne',sans-serif; font-size:clamp(1.4rem,3vw,2rem); font-weight:800; letter-spacing:-0.02em; line-height:1.2; margin-bottom:14px; }
+    .rating-row { display:flex; align-items:center; gap:10px; margin-bottom:20px; }
+    .rating-stars { font-size:1rem; }
+    .rating-text { font-size:0.85rem; color:var(--slate); }
+    .price-section { padding:20px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); margin-bottom:24px; }
+    .price-main { font-family:'Syne',sans-serif; font-size:2.2rem; font-weight:800; margin-bottom:4px; }
+    .price-old { font-size:0.95rem; color:var(--slate); text-decoration:line-through; }
+    .price-save { display:inline-block; background:rgba(16,185,129,0.15); color:var(--green); font-size:0.8rem; font-weight:700; padding:3px 10px; border-radius:4px; margin-left:10px; }
+
+    .qty-row { display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+    .qty-label { font-size:0.85rem; color:var(--slate); }
+    .qty-ctrl { display:flex; align-items:center; gap:0; border:1.5px solid var(--border); border-radius:8px; overflow:hidden; }
+    .qty-btn { background:var(--navy-3); border:none; color:var(--white); width:36px; height:36px; font-size:1.1rem; cursor:pointer; transition:background 0.2s; }
+    .qty-btn:hover { background:var(--blue); }
+    .qty-num { background:var(--navy-2); width:44px; height:36px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:0.95rem; }
+
+    .action-btns { display:flex; gap:12px; flex-direction:column; }
+    .btn-add-cart { background:var(--blue); color:#fff; border:none; border-radius:10px; padding:14px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; transition:background 0.2s; }
+    .btn-add-cart:hover { background:var(--blue-d); }
+    .btn-buy-now { background:var(--green); color:#fff; border:none; border-radius:10px; padding:14px; font-family:'Inter',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; transition:filter 0.2s; }
+    .btn-buy-now:hover { filter:brightness(1.1); }
+
+    .features { margin-top:24px; }
+    .feature-item { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--slate); }
+    .feature-item:last-child { border-bottom:none; }
+
+    .desc-section { margin-top:48px; }
+    .desc-title { font-family:'Syne',sans-serif; font-size:1.1rem; font-weight:700; margin-bottom:14px; }
+    .desc-text { font-size:0.92rem; color:var(--slate); line-height:1.8; }
+
+    .related-section { padding:0 5% 60px; max-width:1200px; margin:0 auto; }
+    .related-title { font-family:'Syne',sans-serif; font-size:1.3rem; font-weight:700; margin-bottom:20px; }
+    .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+
+    @media(max-width:768px) {
+      .product-layout { grid-template-columns:1fr; }
+    }
+  </style>
+  <script src="../js/data.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">Tech<span>Shop</span></a>
+  <div class="nav-search">
+    <input type="text" placeholder="Ürün ara..." onkeydown="if(event.key==='Enter') window.location='products.html?q='+this.value">
+    <button>🔍</button>
+  </div>
+  <div class="nav-actions">
+    <a href="products.html" class="nav-link">Ürünler</a>
+    <button class="cart-btn" onclick="window.location='cart.html'">🛒 Sepet <span id="cartBadge"></span></button>
+  </div>
+</nav>
+
+<div class="detail-wrap" id="detailWrap"></div>
+
+<div class="related-section">
+  <div class="related-title">Benzer Ürünler</div>
+  <div class="products-grid" id="relatedGrid"></div>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 TechShop</div>
+    <div class="footer-dev">Ali Demirbilek tarafından geliştirildi · <a href="../../index.html">Portfolyo</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('sharedStyles').textContent = SHARED_STYLES;
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id'));
+  const product = PRODUCTS.find(p => p.id === id);
+
+  if (!product) {
+    document.getElementById('detailWrap').innerHTML = '<div style="text-align:center;padding:80px;color:var(--slate)"><div style="font-size:3rem;margin-bottom:16px">😕</div><div>Ürün bulunamadı.</div><a href="products.html" style="color:var(--blue);display:block;margin-top:12px">← Ürünlere Dön</a></div>';
+  } else {
+    document.title = product.name + ' — TechShop';
+    const discount = product.oldPrice ? Math.round((1 - product.price / product.oldPrice) * 100) : 0;
+    const saving = product.oldPrice ? product.oldPrice - product.price : 0;
+    document.getElementById('detailWrap').innerHTML = `
+      <div class="breadcrumb">
+        <a href="../index.html">Ana Sayfa</a><span>›</span>
+        <a href="products.html">Ürünler</a><span>›</span>
+        <a href="products.html?cat=${product.category}">${product.category}</a><span>›</span>
+        <span style="color:var(--white)">${product.name}</span>
+      </div>
+      <div class="product-layout">
+        <div class="product-visual">
+          <div class="product-big-emoji">${product.img}</div>
+          ${product.badge ? `<span class="product-badge-big">${product.badge}</span>` : ''}
+          ${discount ? `<span class="discount-badge-big">-%${discount}</span>` : ''}
+        </div>
+        <div class="product-info">
+          <div class="product-cat-tag">${product.category}</div>
+          <h1 class="product-title">${product.name}</h1>
+          <div class="rating-row">
+            <div class="rating-stars">${starHTML(product.rating)}</div>
+            <span class="rating-text">${product.rating} · ${product.reviews} değerlendirme</span>
+          </div>
+          <div class="price-section">
+            <div class="price-main">
+              ${formatPrice(product.price)}
+              ${saving ? `<span class="price-save">${formatPrice(saving)} tasarruf</span>` : ''}
+            </div>
+            ${product.oldPrice ? `<span class="price-old">${formatPrice(product.oldPrice)}</span>` : ''}
+          </div>
+          <div class="qty-row">
+            <span class="qty-label">Adet:</span>
+            <div class="qty-ctrl">
+              <button class="qty-btn" onclick="changeQty(-1)">−</button>
+              <div class="qty-num" id="qtyDisplay">1</div>
+              <button class="qty-btn" onclick="changeQty(1)">+</button>
+            </div>
+          </div>
+          <div class="action-btns">
+            <button class="btn-add-cart" onclick="addToCartFromDetail()">🛒 Sepete Ekle</button>
+            <button class="btn-buy-now" onclick="addToCartFromDetail(); window.location='cart.html'">⚡ Hemen Satın Al</button>
+          </div>
+          <div class="features">
+            <div class="feature-item">✅ Stokta mevcut — hızlı kargo</div>
+            <div class="feature-item">🔄 14 gün içinde ücretsiz iade</div>
+            <div class="feature-item">🛡️ 2 yıl resmi garanti</div>
+            <div class="feature-item">💳 Kredi kartına 12 taksit imkânı</div>
+          </div>
+        </div>
+      </div>
+      <div class="desc-section">
+        <div class="desc-title">Ürün Açıklaması</div>
+        <div class="desc-text">${product.desc}</div>
+      </div>`;
+
+    let qty = 1;
+    function changeQty(delta) {
+      qty = Math.max(1, qty + delta);
+      document.getElementById('qtyDisplay').textContent = qty;
+    }
+    function addToCartFromDetail() { addToCart(product.id, qty); }
+    window.changeQty = changeQty;
+    window.addToCartFromDetail = addToCartFromDetail;
+
+    const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+    document.getElementById('relatedGrid').innerHTML = related.map(p => productCardHTML(p, '../')).join('');
+  }
+
+  updateCartBadge();
+</script>
+</body>
+</html>

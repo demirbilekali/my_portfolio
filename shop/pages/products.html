@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ürünler — TechShop</title>
+  <style id="sharedStyles"></style>
+  <style>
+    .page-wrap { display:grid; grid-template-columns:220px 1fr; gap:24px; padding:40px 5%; max-width:1200px; margin:0 auto; }
+    .sidebar { position:sticky; top:80px; height:fit-content; }
+    .sidebar-card { background:var(--navy-2); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; }
+    .filter-title { font-family:'Syne',sans-serif; font-size:0.8rem; font-weight:700; color:var(--slate); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:14px; }
+    .filter-option { display:flex; align-items:center; gap:10px; padding:7px 0; cursor:pointer; border-radius:6px; transition:color 0.2s; }
+    .filter-option:hover { color:var(--blue); }
+    .filter-option input[type=checkbox] { accent-color:var(--blue); width:15px; height:15px; cursor:pointer; }
+    .filter-option label { font-size:0.87rem; cursor:pointer; flex:1; }
+    .filter-option .count { font-size:0.72rem; color:var(--slate); }
+    .price-inputs { display:flex; gap:8px; align-items:center; }
+    .price-input { background:var(--navy-3); border:1.5px solid var(--border); border-radius:6px; padding:7px 10px; color:var(--white); font-family:'Inter',sans-serif; font-size:0.82rem; width:80px; outline:none; }
+    .price-input:focus { border-color:var(--blue); }
+    .apply-btn { width:100%; background:var(--blue); color:#fff; border:none; border-radius:7px; padding:9px; font-family:'Inter',sans-serif; font-size:0.84rem; font-weight:600; cursor:pointer; margin-top:10px; transition:background 0.2s; }
+    .apply-btn:hover { background:var(--blue-d); }
+    .clear-btn { width:100%; background:transparent; color:var(--slate); border:1px solid var(--border); border-radius:7px; padding:8px; font-family:'Inter',sans-serif; font-size:0.82rem; cursor:pointer; margin-top:8px; transition:all 0.2s; }
+    .clear-btn:hover { border-color:var(--slate); color:var(--white); }
+
+    .products-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px; }
+    .result-count { font-size:0.88rem; color:var(--slate); }
+    .result-count strong { color:var(--white); }
+    .sort-select { background:var(--navy-2); border:1.5px solid var(--border); border-radius:8px; padding:8px 12px; color:var(--white); font-family:'Inter',sans-serif; font-size:0.85rem; outline:none; cursor:pointer; }
+    .sort-select:focus { border-color:var(--blue); }
+    .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+    .empty-msg { text-align:center; padding:60px; color:var(--slate); grid-column:1/-1; }
+    .empty-msg .big { font-size:3rem; margin-bottom:12px; }
+
+    @media(max-width:768px) {
+      .page-wrap { grid-template-columns:1fr; }
+      .sidebar { position:static; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    }
+  </style>
+  <script src="../js/data.js"></script>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">Tech<span>Shop</span></a>
+  <div class="nav-search">
+    <input type="text" id="searchInput" placeholder="Ürün ara...">
+    <button onclick="applySearch()">🔍</button>
+  </div>
+  <div class="nav-actions">
+    <a href="products.html" class="nav-link">Ürünler</a>
+    <button class="cart-btn" onclick="window.location='cart.html'">
+      🛒 Sepet <span id="cartBadge"></span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-card">
+      <div class="filter-title">Kategoriler</div>
+      <div id="catFilters"></div>
+    </div>
+    <div class="sidebar-card">
+      <div class="filter-title">Fiyat Aralığı</div>
+      <div class="price-inputs">
+        <input type="number" class="price-input" id="minPrice" placeholder="Min" min="0">
+        <span style="color:var(--slate)">—</span>
+        <input type="number" class="price-input" id="maxPrice" placeholder="Max" min="0">
+      </div>
+      <button class="apply-btn" onclick="render()">Uygula</button>
+    </div>
+    <div class="sidebar-card">
+      <div class="filter-title">Özellikler</div>
+      <div class="filter-option"><input type="checkbox" id="onlyDiscount" onchange="render()"><label for="onlyDiscount">Sadece İndirimli</label></div>
+      <div class="filter-option"><input type="checkbox" id="onlyNew" onchange="render()"><label for="onlyNew">Yeni Ürünler</label></div>
+    </div>
+    <button class="clear-btn" onclick="clearFilters()">✕ Filtreleri Temizle</button>
+  </aside>
+
+  <div>
+    <div class="products-header">
+      <div class="result-count" id="resultCount"></div>
+      <select class="sort-select" id="sortSelect" onchange="render()">
+        <option value="default">Varsayılan</option>
+        <option value="price-asc">Fiyat: Düşükten Yükseğe</option>
+        <option value="price-desc">Fiyat: Yüksekten Düşüğe</option>
+        <option value="rating">En Yüksek Puan</option>
+        <option value="reviews">En Çok Değerlendirilen</option>
+        <option value="discount">En Yüksek İndirim</option>
+      </select>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 TechShop</div>
+    <div class="footer-dev">Ali Demirbilek tarafından geliştirildi · <a href="../../index.html">Portfolyo</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('sharedStyles').textContent = SHARED_STYLES;
+
+  const cats = [...new Set(PRODUCTS.map(p => p.category))];
+  document.getElementById('catFilters').innerHTML = cats.map(c => `
+    <div class="filter-option">
+      <input type="checkbox" id="cat_${c}" value="${c}" onchange="render()">
+      <label for="cat_${c}">${c.charAt(0).toUpperCase()+c.slice(1)}</label>
+      <span class="count">${PRODUCTS.filter(p=>p.category===c).length}</span>
+    </div>`).join('');
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('cat')) {
+    const cb = document.getElementById('cat_' + params.get('cat'));
+    if (cb) cb.checked = true;
+  }
+  if (params.get('q')) {
+    document.getElementById('searchInput').value = params.get('q');
+  }
+
+  function getFiltered() {
+    let result = [...PRODUCTS];
+    const checkedCats = [...document.querySelectorAll('#catFilters input:checked')].map(i => i.value);
+    if (checkedCats.length) result = result.filter(p => checkedCats.includes(p.category));
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    if (q) result = result.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+    const min = parseInt(document.getElementById('minPrice').value) || 0;
+    const max = parseInt(document.getElementById('maxPrice').value) || Infinity;
+    result = result.filter(p => p.price >= min && p.price <= max);
+    if (document.getElementById('onlyDiscount').checked) result = result.filter(p => p.oldPrice);
+    if (document.getElementById('onlyNew').checked) result = result.filter(p => p.badge === 'Yeni');
+    const sort = document.getElementById('sortSelect').value;
+    if (sort === 'price-asc')  result.sort((a,b) => a.price - b.price);
+    if (sort === 'price-desc') result.sort((a,b) => b.price - a.price);
+    if (sort === 'rating')     result.sort((a,b) => b.rating - a.rating);
+    if (sort === 'reviews')    result.sort((a,b) => b.reviews - a.reviews);
+    if (sort === 'discount')   result.sort((a,b) => ((b.oldPrice||b.price)-b.price) - ((a.oldPrice||a.price)-a.price));
+    return result;
+  }
+
+  function render() {
+    const filtered = getFiltered();
+    document.getElementById('resultCount').innerHTML = `<strong>${filtered.length}</strong> ürün bulundu`;
+    const grid = document.getElementById('productsGrid');
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="empty-msg"><div class="big">🔍</div><div>Ürün bulunamadı. Filtreleri değiştirmeyi deneyin.</div></div>';
+      return;
+    }
+    grid.innerHTML = filtered.map(p => productCardHTML(p, '../')).join('');
+  }
+
+  function clearFilters() {
+    document.querySelectorAll('#catFilters input').forEach(i => i.checked = false);
+    document.getElementById('minPrice').value = '';
+    document.getElementById('maxPrice').value = '';
+    document.getElementById('onlyDiscount').checked = false;
+    document.getElementById('onlyNew').checked = false;
+    document.getElementById('searchInput').value = '';
+    document.getElementById('sortSelect').value = 'default';
+    render();
+  }
+
+  function applySearch() { render(); }
+  document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') render(); });
+
+  updateCartBadge();
+  render();
+</script>
+</body>
+</html>
