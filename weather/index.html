@@ -28,7 +28,7 @@
       color: var(--white);
     }
 
-    /* HEADER */
+    
     header {
       display: flex; justify-content: space-between; align-items: center;
       padding: 20px 5%;
@@ -46,13 +46,13 @@
     }
     .back-link:hover { color: var(--blue); }
 
-    /* MAIN */
+    
     main {
       max-width: 900px; margin: 0 auto;
       padding: 50px 5%;
     }
 
-    /* SEARCH */
+    
     .search-section { text-align: center; margin-bottom: 48px; }
     .search-title {
       font-family: 'Syne', sans-serif;
@@ -89,7 +89,7 @@
     }
     .search-btn:hover { background: var(--blue-d); }
 
-    /* QUICK CITIES */
+    
     .quick-cities {
       display: flex; gap: 8px; justify-content: center;
       flex-wrap: wrap; margin-top: 14px;
@@ -103,14 +103,14 @@
     }
     .city-btn:hover { border-color: var(--blue); color: var(--blue); }
 
-    /* ERROR */
+    
     .error-msg {
       text-align: center; color: #F87171;
       font-size: 0.9rem; margin-bottom: 24px;
       display: none;
     }
 
-    /* LOADING */
+    
     .loading {
       text-align: center; padding: 60px 0;
       display: none;
@@ -125,7 +125,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* WEATHER CARD */
+    
     .weather-result { display: none; }
 
     .current-card {
@@ -192,7 +192,49 @@
       font-size: 1.2rem; font-weight: 700;
     }
 
-    /* FORECAST */
+    
+    .hourly-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+      color: var(--slate); text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 14px;
+    }
+    .hourly-scroll {
+      display: flex; gap: 10px;
+      overflow-x: auto; padding-bottom: 8px;
+      margin-bottom: 24px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--navy-3) transparent;
+    }
+    .hourly-scroll::-webkit-scrollbar { height: 4px; }
+    .hourly-scroll::-webkit-scrollbar-track { background: transparent; }
+    .hourly-scroll::-webkit-scrollbar-thumb { background: var(--navy-3); border-radius: 2px; }
+    .hourly-card {
+      background: var(--navy-2);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      text-align: center; min-width: 90px;
+      flex-shrink: 0;
+      transition: border-color 0.2s;
+    }
+    .hourly-card:hover { border-color: var(--blue); }
+    .hourly-card.now { border-color: var(--blue); background: var(--navy-3); }
+    .hourly-time {
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--slate); margin-bottom: 8px;
+    }
+    .hourly-card.now .hourly-time { color: var(--blue); }
+    .hourly-icon { width: 36px; height: 36px; margin: 0 auto 6px; }
+    .hourly-temp {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem; font-weight: 700;
+    }
+    .hourly-rain {
+      font-size: 0.72rem; color: #60A5FA;
+      margin-top: 4px;
+    }
+
+    
     .forecast-title {
       font-family: 'Syne', sans-serif;
       font-size: 1rem; font-weight: 700;
@@ -234,7 +276,7 @@
       font-size: 1rem; color: var(--slate);
     }
 
-    /* FOOTER */
+    
     footer {
       text-align: center; padding: 30px;
       color: rgba(255,255,255,0.2); font-size: 0.75rem;
@@ -320,6 +362,9 @@
         </div>
       </div>
 
+      <div class="hourly-title">Saatlik Tahmin</div>
+      <div class="hourly-scroll" id="hourlyScroll"></div>
+
       <div class="forecast-title">5 Günlük Tahmin</div>
       <div class="forecast-grid" id="forecastGrid"></div>
 
@@ -365,7 +410,7 @@
       show(loading);
 
       try {
-        // Current weather
+        
         const currentRes = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=tr`
         );
@@ -373,7 +418,7 @@
         if (!currentRes.ok) throw new Error('City not found');
         const current = await currentRes.json();
 
-        // Forecast
+        
         const forecastRes = await fetch(
           `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=tr`
         );
@@ -381,6 +426,7 @@
 
         hide(loading);
         renderCurrent(current);
+        renderHourly(forecast);
         renderForecast(forecast);
         show(result);
 
@@ -390,10 +436,14 @@
       }
     }
 
+    function iconUrl(code) {
+      return `https://openweathermap.org/img/wn/${code}@2x.png`;
+    }
+
     function renderCurrent(data) {
       document.getElementById('cityName').textContent = `${data.name}, ${data.sys.country}`;
       document.getElementById('currentDate').textContent = formatDate(new Date());
-      document.getElementById('weatherIcon').src = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+      document.getElementById('weatherIcon').src = iconUrl(data.weather[0].icon);
       document.getElementById('weatherDesc').textContent = data.weather[0].description;
       document.getElementById('tempMain').innerHTML = `${Math.round(data.main.temp)}<sup>°C</sup>`;
       document.getElementById('tempFeels').textContent = `Hissedilen: ${Math.round(data.main.feels_like)}°C`;
@@ -403,8 +453,32 @@
       document.getElementById('pressure').textContent = `${data.main.pressure} hPa`;
     }
 
+    function renderHourly(data) {
+      const scroll = document.getElementById('hourlyScroll');
+      scroll.innerHTML = '';
+      const items = data.list.slice(0, 12); 
+      const now = new Date();
+
+      items.forEach((item, i) => {
+        const date = new Date(item.dt * 1000);
+        const hours = date.getHours().toString().padStart(2, '0');
+        const mins = date.getMinutes().toString().padStart(2, '0');
+        const timeLabel = i === 0 ? 'Şimdi' : `${hours}:${mins}`;
+        const rain = item.pop ? Math.round(item.pop * 100) : 0;
+
+        scroll.innerHTML += `
+          <div class="hourly-card ${i === 0 ? 'now' : ''}">
+            <div class="hourly-time">${timeLabel}</div>
+            <img class="hourly-icon" src="${iconUrl(item.weather[0].icon)}" alt="${item.weather[0].description}">
+            <div class="hourly-temp">${Math.round(item.main.temp)}°</div>
+            ${rain > 20 ? `<div class="hourly-rain">💧 ${rain}%</div>` : ''}
+          </div>
+        `;
+      });
+    }
+
     function renderForecast(data) {
-      // One entry per day (noon forecast)
+      
       const dailyMap = {};
       data.list.forEach(item => {
         const date = item.dt_txt.split(' ')[0];
@@ -429,7 +503,7 @@
         grid.innerHTML += `
           <div class="forecast-card">
             <div class="forecast-day">${dayName}</div>
-            <img class="forecast-icon" src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${desc}">
+            <img class="forecast-icon" src="${iconUrl(icon)}" alt="${desc}">
             <div class="forecast-desc">${desc}</div>
             <div class="forecast-temps">
               <span class="temp-high">${high}°</span>

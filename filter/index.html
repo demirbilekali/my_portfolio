@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fotoğraf Filtresi | Ali Demirbilek</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0F172A; --navy-2: #1E293B; --navy-3: #263348;
+      --blue: #3B82F6; --blue-d: #1D4ED8;
+      --slate: #94A3B8; --white: #F1F5F9;
+      --border: rgba(255,255,255,0.08);
+      --green: #10B981; --purple: #8B5CF6;
+    }
+    html, body { min-height: 100vh; font-family: 'Inter', sans-serif; background: var(--navy); color: var(--white); }
+
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 5%; border-bottom: 1px solid var(--border);
+    }
+    .logo { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; }
+    .logo span { color: var(--blue); }
+    .back-link { font-size: 0.82rem; color: var(--slate); text-decoration: none; transition: color 0.2s; }
+    .back-link:hover { color: var(--blue); }
+
+    main { max-width: 1100px; margin: 0 auto; padding: 40px 5%; }
+
+    .page-title { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .page-title span { color: var(--blue); }
+    .page-sub { color: var(--slate); font-size: 0.95rem; margin-bottom: 36px; }
+
+    .app-grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; align-items: start; }
+
+    .canvas-wrap {
+      background: var(--navy-2); border: 1px solid var(--border);
+      border-radius: 16px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .canvas-toolbar {
+      display: flex; gap: 10px; padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .tool-btn {
+      background: var(--navy-3); border: 1px solid var(--border);
+      color: var(--white); border-radius: 6px;
+      padding: 8px 14px; font-size: 0.82rem;
+      font-family: 'Inter', sans-serif; font-weight: 500;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .tool-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .tool-btn.primary { background: var(--blue); border-color: var(--blue); }
+    .tool-btn.primary:hover { background: var(--blue-d); }
+    .tool-btn.success { background: var(--green); border-color: var(--green); }
+    .tool-btn.success:hover { filter: brightness(1.1); }
+
+    .canvas-area {
+      position: relative; min-height: 400px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .upload-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 14px; padding: 60px 40px; text-align: center;
+      cursor: pointer;
+    }
+    .upload-icon { font-size: 3rem; }
+    .upload-text { color: var(--slate); font-size: 0.9rem; }
+    .upload-text strong { color: var(--white); display: block; font-size: 1rem; margin-bottom: 4px; }
+    canvas { max-width: 100%; display: block; }
+
+    .controls-panel {
+      background: var(--navy-2); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+    }
+    .controls-title {
+      font-family: 'Syne', sans-serif; font-size: 0.9rem;
+      font-weight: 700; color: var(--slate);
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 20px;
+    }
+
+    .filter-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 24px; }
+    .preset-btn {
+      background: var(--navy-3); border: 1.5px solid var(--border);
+      color: var(--white); border-radius: 8px;
+      padding: 10px 6px; font-size: 0.78rem;
+      font-family: 'Inter', sans-serif; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; text-align: center;
+    }
+    .preset-btn:hover { border-color: var(--blue); }
+    .preset-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(59,130,246,0.1); }
+    .preset-icon { display: block; font-size: 1.2rem; margin-bottom: 4px; }
+
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    .control-group { margin-bottom: 18px; }
+    .control-label {
+      display: flex; justify-content: space-between;
+      font-size: 0.82rem; font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .control-label span:last-child { color: var(--blue); font-weight: 600; }
+    input[type="range"] {
+      width: 100%; -webkit-appearance: none; appearance: none;
+      height: 4px; border-radius: 2px;
+      background: var(--navy-3); outline: none; cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 16px; height: 16px;
+      border-radius: 50%; background: var(--blue); cursor: pointer;
+      transition: transform 0.15s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+    .reset-btn {
+      width: 100%; background: transparent;
+      border: 1px solid var(--border); color: var(--slate);
+      border-radius: 8px; padding: 10px;
+      font-family: 'Inter', sans-serif; font-size: 0.85rem;
+      cursor: pointer; margin-top: 8px; transition: all 0.2s;
+    }
+    .reset-btn:hover { border-color: var(--slate); color: var(--white); }
+
+    .hidden-input { display: none; }
+
+    @media (max-width: 768px) {
+      .app-grid { grid-template-columns: 1fr; }
+      .filter-presets { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Ali<span>.</span>dev</div>
+  <a href="../index.html" class="back-link">← Portfolyoya Dön</a>
+</header>
+
+<main>
+  <h1 class="page-title">Fotoğraf <span>Filtresi</span></h1>
+  <p class="page-sub">Görüntü işleme teknikleriyle fotoğraflarına filtre uygula ve indir · JavaScript Canvas API</p>
+
+  <div class="app-grid">
+
+    <div class="canvas-wrap">
+      <div class="canvas-toolbar">
+        <button class="tool-btn primary" onclick="document.getElementById('fileInput').click()">📁 Fotoğraf Yükle</button>
+        <button class="tool-btn" onclick="downloadImage()">⬇️ İndir</button>
+        <button class="tool-btn" onclick="compareToggle()" id="compareBtn">👁 Karşılaştır</button>
+      </div>
+      <div class="canvas-area" id="canvasArea">
+        <div class="upload-placeholder" onclick="document.getElementById('fileInput').click()">
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-text">
+            <strong>Fotoğraf yüklemek için tıkla</strong>
+            JPG, PNG, WEBP desteklenir
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-panel">
+      <div class="controls-title">Filtreler & Ayarlar</div>
+
+      <div class="filter-presets">
+        <button class="preset-btn active" onclick="applyPreset('normal')"><span class="preset-icon">🌄</span>Normal</button>
+        <button class="preset-btn" onclick="applyPreset('grayscale')"><span class="preset-icon">⬜</span>Siyah-Beyaz</button>
+        <button class="preset-btn" onclick="applyPreset('sepia')"><span class="preset-icon">🟤</span>Sepya</button>
+        <button class="preset-btn" onclick="applyPreset('vivid')"><span class="preset-icon">🌈</span>Canlı</button>
+        <button class="preset-btn" onclick="applyPreset('cool')"><span class="preset-icon">🧊</span>Soğuk</button>
+        <button class="preset-btn" onclick="applyPreset('warm')"><span class="preset-icon">🔥</span>Sıcak</button>
+        <button class="preset-btn" onclick="applyPreset('fade')"><span class="preset-icon">🌫️</span>Soluk</button>
+        <button class="preset-btn" onclick="applyPreset('invert')"><span class="preset-icon">🔄</span>Ters</button>
+        <button class="preset-btn" onclick="applyPreset('noir')"><span class="preset-icon">🎬</span>Noir</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="control-group">
+        <div class="control-label"><span>Parlaklık</span><span id="brightnessVal">100%</span></div>
+        <input type="range" id="brightness" min="0" max="200" value="100" oninput="updateFilter()">
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>Kontrast</span><span id="contrastVal">100%</span></div>
+        <input type="range" id="contrast" min="0" max="200" value="100" oninput="updateFilter()">
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>Doygunluk</span><span id="saturationVal">100%</span></div>
+        <input type="range" id="saturation" min="0" max="300" value="100" oninput="updateFilter()">
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>Keskinlik (Blur)</span><span id="blurVal">0px</span></div>
+        <input type="range" id="blur" min="0" max="10" value="0" step="0.5" oninput="updateFilter()">
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>Ton (Hue)</span><span id="hueVal">0°</span></div>
+        <input type="range" id="hue" min="0" max="360" value="0" oninput="updateFilter()">
+      </div>
+      <div class="control-group">
+        <div class="control-label"><span>Opaklık</span><span id="opacityVal">100%</span></div>
+        <input type="range" id="opacity" min="10" max="100" value="100" oninput="updateFilter()">
+      </div>
+
+      <button class="reset-btn" onclick="resetAll()">↺ Sıfırla</button>
+    </div>
+
+  </div>
+</main>
+
+<input type="file" id="fileInput" class="hidden-input" accept="image/*" onchange="loadImage(event)">
+
+<footer style="text-align:center;padding:30px;color:rgba(255,255,255,0.2);font-size:0.75rem;border-top:1px solid var(--border);margin-top:60px;">
+  <p>Ali Demirbilek tarafından geliştirildi · <a href="../index.html" style="color:var(--blue);text-decoration:none;">Portfolyo</a> · JavaScript Canvas API</p>
+</footer>
+
+<script>
+  let originalImageData = null;
+  let currentImage = null;
+  let isComparing = false;
+
+  const presets = {
+    normal:    { brightness: 100, contrast: 100, saturation: 100, blur: 0, hue: 0, opacity: 100 },
+    grayscale: { brightness: 100, contrast: 110, saturation: 0,   blur: 0, hue: 0, opacity: 100 },
+    sepia:     { brightness: 105, contrast: 95,  saturation: 50,  blur: 0, hue: 30, opacity: 100 },
+    vivid:     { brightness: 110, contrast: 130, saturation: 200, blur: 0, hue: 0, opacity: 100 },
+    cool:      { brightness: 100, contrast: 105, saturation: 110, blur: 0, hue: 200, opacity: 100 },
+    warm:      { brightness: 110, contrast: 105, saturation: 120, blur: 0, hue: 15, opacity: 100 },
+    fade:      { brightness: 120, contrast: 70,  saturation: 60,  blur: 0.5, hue: 0, opacity: 85 },
+    invert:    { brightness: 100, contrast: 100, saturation: 100, blur: 0, hue: 180, opacity: 100 },
+    noir:      { brightness: 90,  contrast: 160, saturation: 0,   blur: 0, hue: 0, opacity: 100 },
+  };
+
+  function applyPreset(name) {
+    const p = presets[name];
+    document.getElementById('brightness').value  = p.brightness;
+    document.getElementById('contrast').value    = p.contrast;
+    document.getElementById('saturation').value  = p.saturation;
+    document.getElementById('blur').value        = p.blur;
+    document.getElementById('hue').value         = p.hue;
+    document.getElementById('opacity').value     = p.opacity;
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    updateFilter();
+  }
+
+  function getFilterString() {
+    const b  = document.getElementById('brightness').value;
+    const c  = document.getElementById('contrast').value;
+    const s  = document.getElementById('saturation').value;
+    const bl = document.getElementById('blur').value;
+    const h  = document.getElementById('hue').value;
+    const o  = document.getElementById('opacity').value;
+    document.getElementById('brightnessVal').textContent = b + '%';
+    document.getElementById('contrastVal').textContent   = c + '%';
+    document.getElementById('saturationVal').textContent = s + '%';
+    document.getElementById('blurVal').textContent       = bl + 'px';
+    document.getElementById('hueVal').textContent        = h + '°';
+    document.getElementById('opacityVal').textContent    = o + '%';
+    return `brightness(${b}%) contrast(${c}%) saturate(${s}%) blur(${bl}px) hue-rotate(${h}deg) opacity(${o}%)`;
+  }
+
+  function updateFilter() {
+    const canvas = document.getElementById('mainCanvas');
+    if (!canvas) return;
+    canvas.style.filter = getFilterString();
+  }
+
+  function loadImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        currentImage = img;
+        const area = document.getElementById('canvasArea');
+        area.innerHTML = '';
+        const canvas = document.createElement('canvas');
+        canvas.id = 'mainCanvas';
+        const maxW = area.offsetWidth || 700;
+        const scale = Math.min(1, maxW / img.width);
+        canvas.width  = img.width  * scale;
+        canvas.height = img.height * scale;
+        canvas.style.maxWidth = '100%';
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        area.appendChild(canvas);
+        updateFilter();
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function downloadImage() {
+    const canvas = document.getElementById('mainCanvas');
+    if (!canvas) { alert('Önce bir fotoğraf yükleyin.'); return; }
+    const offscreen = document.createElement('canvas');
+    offscreen.width  = canvas.width;
+    offscreen.height = canvas.height;
+    const ctx = offscreen.getContext('2d');
+    ctx.filter = getFilterString();
+    ctx.drawImage(canvas, 0, 0);
+    const link = document.createElement('a');
+    link.download = 'filtrelenmis_foto.png';
+    link.href = offscreen.toDataURL('image/png');
+    link.click();
+  }
+
+  function compareToggle() {
+    const canvas = document.getElementById('mainCanvas');
+    if (!canvas) return;
+    isComparing = !isComparing;
+    const btn = document.getElementById('compareBtn');
+    if (isComparing) {
+      canvas.style.filter = 'none';
+      btn.textContent = '✅ Filtreli Görünüm';
+      btn.style.borderColor = 'var(--green)';
+    } else {
+      updateFilter();
+      btn.textContent = '👁 Karşılaştır';
+      btn.style.borderColor = '';
+    }
+  }
+
+  function resetAll() {
+    applyPreset('normal');
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.preset-btn').classList.add('active');
+  }
+</script>
+
+</body>
+</html>
